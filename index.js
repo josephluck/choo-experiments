@@ -4,9 +4,7 @@ const App = choo()
 
 App.model({
   state: {
-    todos: [
-      {title: 'Hello'}
-    ],
+    todos: [],
     addNewTodoValue: ''
   },
 
@@ -16,6 +14,12 @@ App.model({
       const todos = [ todo, ...state.todos, ]
 
       return { ...state, todos, addNewTodoValue: '' }
+    },
+    toggleTodoComplete (state, { index }) {
+      const todos = state.todos.slice()
+      todos[index].complete = !todos[index].complete
+
+      return { ...state, todos }
     },
     setNewTodoValue (state, { value }) {
       return { ...state, addNewTodoValue: value }
@@ -29,15 +33,33 @@ const TitleBar = ({ title }) => {
   `
 }
 
-const TodosList = ({ todos }) => {
+const TodosList = ({ todos, onToggle }) => {
   return html`
-    <div>${todos.map(todo => Todo({ todo }))}</div>
+    <div>
+      ${todos.map((todo, index) => {
+        return Todo({
+          todo,
+          onToggle: () => onToggle(index)
+        })
+      })}
+    </div>
   `
 }
 
-const Todo = ({ todo }) => {
+const Todo = ({ todo, onToggle }) => {
   return html`
-    <div>${todo.title}</div>
+    <div>
+      <input
+        type="checkbox"
+        checked=${todo.complete}
+        onchange=${onToggle}
+      />
+      <span
+        style="text-decoration': ${todo.complete ? 'line-through' : 'normal'}"
+      >
+        ${todo.title}
+      </span>
+    </div>
   `
 }
 
@@ -61,14 +83,15 @@ const AddNewTodoForm = ({ value, onChange, onSubmit }) => {
 }
 
 const TodosApp = (state, prev, send) => {
-  const onChange = (value) => send ('setNewTodoValue', { value })
+  const onChange = value => send('setNewTodoValue', { value })
   const onSubmit = () => send('addTodo', { title: state.addNewTodoValue })
+  const onToggle = index => send('toggleTodoComplete', { index })
 
   return html`
     <div>
       ${TitleBar({ title: 'Choodo' })}
       ${AddNewTodoForm({ value: state.addNewTodoValue, onChange, onSubmit })}
-      ${TodosList({ todos: state.todos })}
+      ${TodosList({ todos: state.todos, onToggle })}
     </div>
   `
 }
