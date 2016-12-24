@@ -12,45 +12,32 @@ App.model({
 
   reducers: {
     addTodo (state) {
-      const todos = [
-        { title: state.addNewTodoValue },
-        ...state.todos,
-      ]
+      const todo = { complete: false, title: state.addNewTodoValue }
+      const todos = [ todo, ...state.todos, ]
 
-      return {
-        ...state,
-        todos,
-        addNewTodoValue: ''
-      }
+      return { ...state, todos, addNewTodoValue: '' }
     },
     setNewTodoValue (state, { value }) {
-      return {
-        ...state,
-        addNewTodoValue: value
-      }
+      return { ...state, addNewTodoValue: value }
     }
   }
 })
 
 const TitleBar = ({ title }) => {
-  return html `
+  return html`
     <h1>${title}</h1>
   `
 }
 
 const TodosList = ({ todos }) => {
-  return html `
-    <div>
-      ${todos.map(todo => Todo({ todo }))}
-    </div>
+  return html`
+    <div>${todos.map(todo => Todo({ todo }))}</div>
   `
 }
 
 const Todo = ({ todo }) => {
   return html`
-    <div>
-      ${todo.title}
-    </div>
+    <div>${todo.title}</div>
   `
 }
 
@@ -62,9 +49,7 @@ const AddNewTodoForm = ({ value, onChange, onSubmit }) => {
   const onInputChange = e => onChange(e.target.value)
 
   return html`
-    <form
-      onsubmit=${onFormSubmit}
-    >
+    <form onsubmit=${onFormSubmit}>
       <input
         value=${value}
         onchange=${onInputChange}
