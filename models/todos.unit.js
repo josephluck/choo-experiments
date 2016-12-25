@@ -47,7 +47,7 @@ test('MODELS / todos / receive todo update', function (t) {
 
   const newState = todos.reducers.receiveTodoUpdate(state, payload)
 
-  t.equal(newState.todos.length, 2, 'The length of the todos should be unchanged')
+  t.equal(newState.todos.length, 2, 'The length of the existing todos should be unchanged')
   t.deepEqual(newState.todos[1], editedTodo, 'The second todo should be updated')
   t.end()
 })

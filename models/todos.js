@@ -36,7 +36,7 @@ module.exports = {
   effects: {
     requestTodos (state, payload, send, done) {
       send('setLoading', { loading: true }, done)
-      store.getAll('todos', todos => {
+      return store.getAll('todos').then((todos) => {
         send('setLoading', { loading: false }, done)
         send('receiveTodos', { todos }, done)
       })
@@ -45,7 +45,7 @@ module.exports = {
     addTodo (state, payload, send, done) {
       send('setLoading', { loading: true }, done)
       const todo = { complete: false, title: state.addNewTodoValue, uuid: Math.random() }
-      store.add('todos', todo, () => {
+      return store.add('todos', todo).then(() => {
         send('setLoading', { loading: false }, done)
         send('receiveTodo', { todo }, done)
       })
@@ -54,9 +54,7 @@ module.exports = {
     updateTodo (state, payload, send, done) {
       send('receiveTodoUpdate', { todo: payload.todo }, done)
       const todoIndex = state.todos.findIndex(t => t.uuid === payload.todo.uuid)
-      store.replace('todos', todoIndex, payload.todo, () => {
-        done()
-      })
+      return store.replace('todos', todoIndex, payload.todo).then(() => done())
     }
   }
 }
