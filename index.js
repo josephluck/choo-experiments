@@ -1,14 +1,12 @@
 const choo = require('choo')
-const html = require('choo/html')
 const debug = require('./debug')
-const app = choo(debug)
 
+const app = choo(debug)
 const models = [
   require('./models/todos')
 ]
 
-models.forEach(model => app.model(model))
-
+models.forEach((model) => app.model(model))
 app.router([
   ['/', require('./pages/Todos')]
 ])

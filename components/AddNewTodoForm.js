@@ -1,11 +1,11 @@
 const html = require('choo/html')
 
 module.exports = ({ value, onChange, onSubmit }) => {
-  const onFormSubmit = e => {
+  const onFormSubmit = (e) => {
     e.preventDefault()
     onSubmit()
   }
-  const onInputChange = e => onChange(e.target.value)
+  const onInputChange = (e) => onChange(e.target.value)
 
   return html`
     <form onsubmit=${onFormSubmit}>

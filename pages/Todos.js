@@ -5,9 +5,9 @@ const AddNewTodoForm = require('../components/AddNewTodoForm')
 
 module.exports = (state, prev, send) => {
   const requestTodos = () => send('requestTodos')
-  const onChange = value => send('setNewTodoValue', { value })
+  const onChange = (value) => send('setNewTodoValue', { value })
   const onSubmit = () => send('addTodo', { title: state.addNewTodoValue })
-  const onToggle = todo => send('updateTodo', {
+  const onToggle = (todo) => send('updateTodo', {
     todo: { ...todo, complete: !todo.complete }
   })
 
