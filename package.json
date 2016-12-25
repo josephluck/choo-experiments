@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "budo index.js --live  --onupdate \"standard | notify-error\" -- -t babelify",
     "lint": "standard",
-    "unit": "tape-watch -r babel-register **/*.unit.js | tap-spec",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "unit": "tape -r babel-register **/*.unit.js | tap-spec",
+    "unit/watch": "tape-watch -r babel-register **/*.unit.js | tap-spec",
+    "coverage": "nyc --reporter=lcov --reporter=html npm test",
+    "test": "npm run unit"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +23,7 @@
     "babelify": "^7.3.0",
     "budo": "^9.3.0",
     "notify-error": "^1.2.0",
+    "nyc": "^10.0.0",
     "standard": "^8.6.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3"
