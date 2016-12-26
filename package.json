@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "budo index.js --live  --onupdate \"standard | notify-error\" -- -t babelify",
+    "dev": "budo index.js --live --pushstate  --onupdate \"standard | notify-error\" -- -t babelify",
     "lint": "standard",
     "unit": "tape -r babel-register **/*.unit.js | tap-spec",
     "unit/watch": "tape-watch -r babel-register **/*.unit.js | tap-spec",
