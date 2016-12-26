@@ -4,20 +4,20 @@ const TodosList = require('../components/TodosList')
 const AddNewTodoForm = require('../components/AddNewTodoForm')
 
 module.exports = (state, prev, send) => {
-  const requestTodos = () => send('requestTodos')
-  const onChange = (value) => send('setNewTodoValue', { value })
-  const onSubmit = () => send('addTodo', { title: state.addNewTodoValue })
-  const onToggle = (todo) => send('updateTodo', {
+  const requestTodos = () => send('todos:requestTodos')
+  const onChange = (value) => send('todos:setNewTodoValue', { value })
+  const onSubmit = () => send('todos:addTodo', { title: state.todos.addNewTodoValue })
+  const onToggle = (todo) => send('todos:updateTodo', {
     todo: { ...todo, complete: !todo.complete }
   })
 
   return html`
     <div onload=${requestTodos}>
       ${TitleBar({ title: 'Choodo' })}
-      ${AddNewTodoForm({ value: state.addNewTodoValue, onChange, onSubmit })}
-      ${TodosList({ todos: state.todos, onToggle })}
+      ${AddNewTodoForm({ value: state.todos.addNewTodoValue, onChange, onSubmit })}
+      ${TodosList({ todos: state.todos.todos, onToggle })}
 
-      ${state.loading === true ? 'Loading' : null}
+      ${state.todos.loading === true ? 'Loading' : null}
     </div>
   `
 }

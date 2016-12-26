@@ -1,6 +1,8 @@
 const store = require('../utils/store')
 
 module.exports = {
+  namespace: 'todos',
+
   state: {
     todos: [],
     addNewTodoValue: '',
@@ -35,24 +37,24 @@ module.exports = {
 
   effects: {
     requestTodos (state, payload, send, done) {
-      send('setLoading', { loading: true }, done)
+      send('todos:setLoading', { loading: true }, done)
       return store.getAll('todos').then((todos) => {
-        send('setLoading', { loading: false }, done)
-        send('receiveTodos', { todos }, done)
+        send('todos:setLoading', { loading: false }, done)
+        send('todos:receiveTodos', { todos }, done)
       })
     },
 
     addTodo (state, payload, send, done) {
-      send('setLoading', { loading: true }, done)
+      send('todos:setLoading', { loading: true }, done)
       const todo = { complete: false, title: state.addNewTodoValue, uuid: Math.random() }
       return store.add('todos', todo).then(() => {
-        send('setLoading', { loading: false }, done)
-        send('receiveTodo', { todo }, done)
+        send('todos:setLoading', { loading: false }, done)
+        send('todos:receiveTodo', { todo }, done)
       })
     },
 
     updateTodo (state, payload, send, done) {
-      send('receiveTodoUpdate', { todo: payload.todo }, done)
+      send('todos:receiveTodoUpdate', { todo: payload.todo }, done)
       const todoIndex = state.todos.findIndex(t => t.uuid === payload.todo.uuid)
       return store.replace('todos', todoIndex, payload.todo).then(() => done())
     }
