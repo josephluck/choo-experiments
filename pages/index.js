@@ -1,3 +1,4 @@
 module.exports = [
-  ['/todos', require('./Todos')]
+  ['/todos', require('./Todos')],
+  ['/login', require('./Login')]
 ]
