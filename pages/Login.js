@@ -15,23 +15,43 @@ module.exports = (state, prev, send) => {
       <form
         onsubmit=${onSubmit}
       >
-        <label>
-          Username
-        </label>
-        <input
-          type="text"
-          value=${state.login.form.username}
-          onchange=${onUsernameChange}
-        />
+        <div>
+          <label>
+            Username
+          </label>
+          <input
+            type="text"
+            value=${state.login.form.username}
+            onchange=${onUsernameChange}
+          />
+          ${state.login.submitted && state.login.validation.username
+            ? html`
+              <small>
+                Username is required
+              </small>
+            `
+            : null
+          }
+        </div>
 
-        <label>
-          Password
-        </label>
-        <input
-          type="password"
-          value=${state.login.form.password}
-          onchange=${onPasswordChange}
-        />
+        <div>
+          <label>
+            Password
+          </label>
+          <input
+            type="password"
+            value=${state.login.form.password}
+            onchange=${onPasswordChange}
+          />
+          ${state.login.submitted && state.login.validation.password
+            ? html`
+              <small>
+                Password is required
+              </small>
+            `
+            : null
+          }
+        </div>
 
         <button
           type="submit"
