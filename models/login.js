@@ -1,5 +1,4 @@
-// const validate = require('validate.js')
-const validate = () => {}
+const validate = require('validate.js')
 
 const formRules = () => {
   return {

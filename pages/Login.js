@@ -1,4 +1,11 @@
+const css = require('sheetify')
 const html = require('choo/html')
+
+const styles = css`
+  :host > .form {
+    text-align: center;
+  }
+`
 
 module.exports = (child = () => {}) => (state, prev, send) => {
   const onSubmit = (e) => {
@@ -11,9 +18,10 @@ module.exports = (child = () => {}) => (state, prev, send) => {
   const onPasswordChange = onAttrChange('password')
 
   return html`
-    <div>
+    <div class=${styles}>
       <form
         onsubmit=${onSubmit}
+        class="form"
       >
         <div>
           <label>
