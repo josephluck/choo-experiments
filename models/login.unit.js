@@ -1,5 +1,5 @@
 const test = require('tape')
-const login = require('./login')
+const login = require('./login')()
 
 test('MODELS / login / update form', function (t) {
   t.plan(2)

@@ -1,4 +1,6 @@
+const store = require('../utils/store')
+
 module.exports = [
-  require('./todos'),
-  require('./login')
+  require('./todos')({ store }),
+  require('./login')()
 ]

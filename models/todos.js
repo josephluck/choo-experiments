@@ -1,6 +1,6 @@
-const store = require('../utils/store')
-
-module.exports = {
+module.exports = ({
+  store
+}) => ({
   namespace: 'todos',
 
   state: {
@@ -59,4 +59,4 @@ module.exports = {
       return store.replace('todos', todoIndex, payload.todo).then(() => done())
     }
   }
-}
+})

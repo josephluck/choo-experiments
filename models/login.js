@@ -1,13 +1,13 @@
 const validate = require('validate.js')
 
-const rules = () => {
+const formRules = () => {
   return {
     username: { presence: true },
     password: { presence: true }
   }
 }
 
-module.exports = {
+module.exports = () => ({
   namespace: 'login',
 
   state: {
@@ -27,7 +27,7 @@ module.exports = {
       return { ...state, form: newForm }
     },
     validateForm (state) {
-      const validation = validate(state.form, rules()) || {}
+      const validation = validate(state.form, formRules()) || {}
       return { ...state, validation }
     },
     setSubmitting (state, { submitting }) {
@@ -56,4 +56,4 @@ module.exports = {
       }
     }
   }
-}
+})

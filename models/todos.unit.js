@@ -1,5 +1,5 @@
 const test = require('tape')
-const todos = require('./todos')
+const todos = require('./todos')({})
 
 test('MODELS / todos / receive todos', function (t) {
   t.plan(3)
