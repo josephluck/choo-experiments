@@ -1,6 +1,6 @@
 const html = require('choo/html')
 
-module.exports = (state, prev, send) => {
+module.exports = (child = () => {}) => (state, prev, send) => {
   const onSubmit = (e) => {
     e.preventDefault()
     send('login:submit')

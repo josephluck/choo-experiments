@@ -14,7 +14,7 @@ test('PAGES / login / render', function (t) {
     }
   }
 
-  const el = Login(state, state, () => {})
+  const el = Login()(state, state, () => {})
 
   t.equal(el.querySelectorAll('form').length, 1, 'Should render a from element')
   t.end()
