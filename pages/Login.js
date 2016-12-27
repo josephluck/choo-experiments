@@ -1,9 +1,12 @@
-const css = require('sheetify')
 const html = require('choo/html')
+const css = require('sheetify')
 
 const styles = css`
   :host > .form {
     text-align: center;
+  }
+  :host input {
+    padding: 5px 10px;
   }
 `
 
