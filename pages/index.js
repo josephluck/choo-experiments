@@ -1,4 +1,9 @@
+const todos = require('./Todos')
+const login = require('./Login')
+
 module.exports = [
-  ['/todos', require('./Todos')],
-  ['/login', require('./Login')]
+  ['/todos', todos(), [
+    ['/test', todos(login)]
+  ]],
+  ['/login', login]
 ]
