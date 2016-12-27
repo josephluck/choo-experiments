@@ -1,12 +1,13 @@
 const choo = require('choo')
+const css = require('sheetify')
 const debug = require('./utils/debug')
+const pages = require('./pages')
+const models = require('./models')
+css('tachyons/css/tachyons.css')
 
 const app = choo(debug)
 
-const models = require('./models')
 models.forEach((model) => app.model(model))
-
-const pages = require('./pages')
 app.router(pages)
 
 document.body.appendChild(app.start())

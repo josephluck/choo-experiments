@@ -26,7 +26,7 @@ module.exports = (child = () => {}) => (state, prev, send) => {
         onsubmit=${onSubmit}
         class="form"
       >
-        <div>
+        <div class="mt3">
           <label>
             Username
           </label>

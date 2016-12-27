@@ -1,262 +1,219 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
+const html = require('choo/html');
 
-var _templateObject = _taggedTemplateLiteral(['\n    <form onsubmit=', '>\n      <input\n        value=', '\n        onchange=', '\n        type="text"\n        placeholder="Add a todo"\n      />\n    </form>\n  '], ['\n    <form onsubmit=', '>\n      <input\n        value=', '\n        onchange=', '\n        type="text"\n        placeholder="Add a todo"\n      />\n    </form>\n  ']);
-
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-var html = require('choo/html');
-
-module.exports = function (_ref) {
-  var value = _ref.value,
-      onChange = _ref.onChange,
-      onSubmit = _ref.onSubmit;
-
-  var onFormSubmit = function onFormSubmit(e) {
+module.exports = ({ value, onChange, onSubmit }) => {
+  const onFormSubmit = e => {
     e.preventDefault();
     onSubmit();
   };
-  var onInputChange = function onInputChange(e) {
-    return onChange(e.target.value);
-  };
+  const onInputChange = e => onChange(e.target.value);
 
-  return html(_templateObject, onFormSubmit, value, onInputChange);
+  return html`
+    <form onsubmit=${ onFormSubmit }>
+      <input
+        value=${ value }
+        onchange=${ onInputChange }
+        type="text"
+        placeholder="Add a todo"
+      />
+    </form>
+  `;
 };
 
 },{"choo/html":15}],2:[function(require,module,exports){
-'use strict';
+const html = require('choo/html');
 
-var _templateObject = _taggedTemplateLiteral(['\n    <h1>', '</h1>\n  '], ['\n    <h1>', '</h1>\n  ']);
-
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-var html = require('choo/html');
-
-module.exports = function (_ref) {
-  var title = _ref.title;
-
-  return html(_templateObject, title);
+module.exports = ({ title }) => {
+  return html`
+    <h1>${ title }</h1>
+  `;
 };
 
 },{"choo/html":15}],3:[function(require,module,exports){
-'use strict';
+const html = require('choo/html');
 
-var _templateObject = _taggedTemplateLiteral(['\n    <div>\n      <input\n        type="checkbox"\n        checked=', '\n        onchange=', '\n      />\n      <span\n        style="text-decoration\': ', '"\n      >\n        ', '\n      </span>\n    </div>\n  '], ['\n    <div>\n      <input\n        type="checkbox"\n        checked=', '\n        onchange=', '\n      />\n      <span\n        style="text-decoration\': ', '"\n      >\n        ', '\n      </span>\n    </div>\n  ']);
-
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-var html = require('choo/html');
-
-module.exports = function (_ref) {
-  var todo = _ref.todo,
-      onToggle = _ref.onToggle;
-
-  return html(_templateObject, todo.complete, onToggle, todo.complete ? 'line-through' : 'normal', todo.title);
+module.exports = ({ todo, onToggle }) => {
+  return html`
+    <div>
+      <input
+        type="checkbox"
+        checked=${ todo.complete }
+        onchange=${ onToggle }
+      />
+      <span
+        style="text-decoration': ${ todo.complete ? 'line-through' : 'normal' }"
+      >
+        ${ todo.title }
+      </span>
+    </div>
+  `;
 };
 
 },{"choo/html":15}],4:[function(require,module,exports){
-'use strict';
+const html = require('choo/html');
 
-var _templateObject = _taggedTemplateLiteral(['\n    <div>\n      ', '\n    </div>\n  '], ['\n    <div>\n      ', '\n    </div>\n  ']);
+const Todo = require('./Todo');
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-var html = require('choo/html');
-
-var Todo = require('./Todo');
-
-module.exports = function (_ref) {
-  var todos = _ref.todos,
-      _onToggle = _ref.onToggle;
-
-  return html(_templateObject, todos.map(function (todo, index) {
+module.exports = ({ todos, onToggle }) => {
+  return html`
+    <div>
+      ${ todos.map((todo, index) => {
     return Todo({
-      todo: todo,
-      onToggle: function onToggle() {
-        return _onToggle(todo);
-      }
+      todo,
+      onToggle: () => onToggle(todo)
     });
-  }));
+  }) }
+    </div>
+  `;
 };
 
 },{"./Todo":3,"choo/html":15}],5:[function(require,module,exports){
-'use strict';
+const choo = require('choo');
+const debug = require('./utils/debug');
 
-var choo = require('choo');
-var debug = require('./utils/debug');
+const app = choo(debug);
 
-var app = choo(debug);
+const models = require('./models');
+models.forEach(model => app.model(model));
 
-var models = require('./models');
-models.forEach(function (model) {
-  return app.model(model);
-});
-
-var pages = require('./pages');
+const pages = require('./pages');
 app.router(pages);
 
 document.body.appendChild(app.start());
 
 },{"./models":6,"./pages":47,"./utils/debug":48,"choo":16}],6:[function(require,module,exports){
-'use strict';
+const store = require('../utils/store');
 
-var store = require('../utils/store');
-
-module.exports = [require('./todos')({ store: store }), require('./login')()];
+module.exports = [require('./todos')({ store }), require('./login')()];
 
 },{"../utils/store":49,"./login":7,"./todos":8}],7:[function(require,module,exports){
-'use strict';
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var validate = require('validate.js');
+const validate = require('validate.js');
 
-var formRules = function formRules() {
+const formRules = () => {
   return {
     username: { presence: true },
     password: { presence: true }
   };
 };
 
-module.exports = function () {
-  return {
-    namespace: 'login',
+module.exports = () => ({
+  namespace: 'login',
 
-    state: {
-      form: {
-        username: '',
-        password: ''
-      },
-      submitting: false,
-      submitted: false,
-      validation: {}
+  state: {
+    form: {
+      username: '',
+      password: ''
+    },
+    submitting: false,
+    submitted: false,
+    validation: {}
+  },
+
+  reducers: {
+    updateKey(state, { key, value }) {
+      const newForm = _extends({}, state.form);
+      newForm[key] = value;
+      return _extends({}, state, { form: newForm });
+    },
+    validateForm(state) {
+      const validation = validate(state.form, formRules()) || {};
+      return _extends({}, state, { validation });
+    },
+    setSubmitting(state, { submitting }) {
+      return _extends({}, state, { submitting });
+    },
+    setSubmitted(state, { submitted }) {
+      return _extends({}, state, { submitted });
+    }
+  },
+
+  effects: {
+    updateForm(state, payload, send, done) {
+      send('login:updateKey', payload, done);
+      send('login:validateForm', done);
     },
 
-    reducers: {
-      updateKey: function updateKey(state, _ref) {
-        var key = _ref.key,
-            value = _ref.value;
-
-        var newForm = _extends({}, state.form);
-        newForm[key] = value;
-        return _extends({}, state, { form: newForm });
-      },
-      validateForm: function validateForm(state) {
-        var validation = validate(state.form, formRules()) || {};
-        return _extends({}, state, { validation: validation });
-      },
-      setSubmitting: function setSubmitting(state, _ref2) {
-        var submitting = _ref2.submitting;
-
-        return _extends({}, state, { submitting: submitting });
-      },
-      setSubmitted: function setSubmitted(state, _ref3) {
-        var submitted = _ref3.submitted;
-
-        return _extends({}, state, { submitted: submitted });
-      }
-    },
-
-    effects: {
-      updateForm: function updateForm(state, payload, send, done) {
-        send('login:updateKey', payload, done);
-        send('login:validateForm', done);
-      },
-      submit: function submit(state, payload, send, done) {
-        send('login:validateForm', done);
-        send('login:setSubmitted', { submitted: true }, done);
-        var isValid = false;
-        if (isValid) {
-          send('login:setSubmitting', { submitting: true }, done);
-          setTimeout(function () {
-            send('login:setSubmitting', { submitting: false }, done);
-          }, 1000);
-        }
+    submit(state, payload, send, done) {
+      send('login:validateForm', done);
+      send('login:setSubmitted', { submitted: true }, done);
+      const isValid = false;
+      if (isValid) {
+        send('login:setSubmitting', { submitting: true }, done);
+        setTimeout(() => {
+          send('login:setSubmitting', { submitting: false }, done);
+        }, 1000);
       }
     }
-  };
-};
+  }
+});
 
 },{"validate.js":37}],8:[function(require,module,exports){
-'use strict';
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+module.exports = ({
+  store
+}) => ({
+  namespace: 'todos',
 
-module.exports = function (_ref) {
-  var store = _ref.store;
-  return {
-    namespace: 'todos',
+  state: {
+    todos: [],
+    addNewTodoValue: '',
+    loading: false
+  },
 
-    state: {
-      todos: [],
-      addNewTodoValue: '',
-      loading: false
+  reducers: {
+    receiveTodos(state, { todos }) {
+      return _extends({}, state, { todos });
     },
 
-    reducers: {
-      receiveTodos: function receiveTodos(state, _ref2) {
-        var todos = _ref2.todos;
-
-        return _extends({}, state, { todos: todos });
-      },
-      receiveTodo: function receiveTodo(state, _ref3) {
-        var todo = _ref3.todo;
-
-        var todos = [].concat(_toConsumableArray(state.todos), [todo]);
-        return _extends({}, state, { todos: todos, addNewTodoValue: '' });
-      },
-      receiveTodoUpdate: function receiveTodoUpdate(state, _ref4) {
-        var todo = _ref4.todo;
-
-        var todos = state.todos.slice();
-        var todoIndex = state.todos.findIndex(function (t) {
-          return t.uuid === todo.uuid;
-        });
-        todos[todoIndex] = todo;
-        return _extends({}, state, { todos: todos });
-      },
-      setNewTodoValue: function setNewTodoValue(state, _ref5) {
-        var value = _ref5.value;
-
-        return _extends({}, state, { addNewTodoValue: value });
-      },
-      setLoading: function setLoading(state, _ref6) {
-        var loading = _ref6.loading;
-
-        return _extends({}, state, { loading: loading });
-      }
+    receiveTodo(state, { todo }) {
+      const todos = [...state.todos, todo];
+      return _extends({}, state, { todos, addNewTodoValue: '' });
     },
 
-    effects: {
-      requestTodos: function requestTodos(state, payload, send, done) {
-        send('todos:setLoading', { loading: true }, done);
-        return store.getAll('todos').then(function (todos) {
-          send('todos:setLoading', { loading: false }, done);
-          send('todos:receiveTodos', { todos: todos }, done);
-        });
-      },
-      addTodo: function addTodo(state, payload, send, done) {
-        send('todos:setLoading', { loading: true }, done);
-        var todo = { complete: false, title: state.addNewTodoValue, uuid: Math.random() };
-        return store.add('todos', todo).then(function () {
-          send('todos:setLoading', { loading: false }, done);
-          send('todos:receiveTodo', { todo: todo }, done);
-        });
-      },
-      updateTodo: function updateTodo(state, payload, send, done) {
-        send('todos:receiveTodoUpdate', { todo: payload.todo }, done);
-        var todoIndex = state.todos.findIndex(function (t) {
-          return t.uuid === payload.todo.uuid;
-        });
-        return store.replace('todos', todoIndex, payload.todo).then(function () {
-          return done();
-        });
-      }
+    receiveTodoUpdate(state, { todo }) {
+      const todos = state.todos.slice();
+      const todoIndex = state.todos.findIndex(t => t.uuid === todo.uuid);
+      todos[todoIndex] = todo;
+      return _extends({}, state, { todos });
+    },
+
+    setNewTodoValue(state, { value }) {
+      return _extends({}, state, { addNewTodoValue: value });
+    },
+
+    setLoading(state, { loading }) {
+      return _extends({}, state, { loading });
     }
-  };
-};
+  },
+
+  effects: {
+    requestTodos(state, payload, send, done) {
+      send('todos:setLoading', { loading: true }, done);
+      return store.getAll('todos').then(todos => {
+        send('todos:setLoading', { loading: false }, done);
+        send('todos:receiveTodos', { todos }, done);
+      });
+    },
+
+    addTodo(state, payload, send, done) {
+      send('todos:setLoading', { loading: true }, done);
+      const todo = { complete: false, title: state.addNewTodoValue, uuid: Math.random() };
+      return store.add('todos', todo).then(() => {
+        send('todos:setLoading', { loading: false }, done);
+        send('todos:receiveTodo', { todo }, done);
+      });
+    },
+
+    updateTodo(state, payload, send, done) {
+      send('todos:receiveTodoUpdate', { todo: payload.todo }, done);
+      const todoIndex = state.todos.findIndex(t => t.uuid === payload.todo.uuid);
+      return store.replace('todos', todoIndex, payload.todo).then(() => done());
+    }
+  }
+});
 
 },{}],9:[function(require,module,exports){
 // http://wiki.commonjs.org/wiki/Unit_Testing/1.0
@@ -5137,101 +5094,122 @@ module.exports = [
 ]
 
 },{}],45:[function(require,module,exports){
-'use strict';
+const html = require('choo/html');
+const css = 0;
 
-var _templateObject = _taggedTemplateLiteral(['\n    <div class=', '>\n      <form\n        onsubmit=', '\n        class="form"\n      >\n        <div>\n          <label>\n            Username\n          </label>\n          <input\n            type="text"\n            value=', '\n            onchange=', '\n          />\n          ', '\n        </div>\n\n        <div>\n          <label>\n            Password\n          </label>\n          <input\n            type="password"\n            value=', '\n            onchange=', '\n          />\n          ', '\n        </div>\n\n        <button\n          type="submit"\n        >\n          Login\n        </button>\n      </form>\n\n      <div>\n        ', '\n      </div>\n    </div>\n  '], ['\n    <div class=', '>\n      <form\n        onsubmit=', '\n        class="form"\n      >\n        <div>\n          <label>\n            Username\n          </label>\n          <input\n            type="text"\n            value=', '\n            onchange=', '\n          />\n          ', '\n        </div>\n\n        <div>\n          <label>\n            Password\n          </label>\n          <input\n            type="password"\n            value=', '\n            onchange=', '\n          />\n          ', '\n        </div>\n\n        <button\n          type="submit"\n        >\n          Login\n        </button>\n      </form>\n\n      <div>\n        ', '\n      </div>\n    </div>\n  ']),
-    _templateObject2 = _taggedTemplateLiteral(['\n              <small>\n                Username is required\n              </small>\n            '], ['\n              <small>\n                Username is required\n              </small>\n            ']),
-    _templateObject3 = _taggedTemplateLiteral(['\n              <small>\n                Password is required\n              </small>\n            '], ['\n              <small>\n                Password is required\n              </small>\n            ']);
+const styles = (require('sheetify/insert')("._953343d8 > .form {\n    text-align: center;\n  }\n  ._953343d8 input {\n    padding: 5px 10px;\n  }") || true) && "_953343d8";
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-var html = require('choo/html');
-var css = 0;
-
-var styles = (require('sheetify/insert')("._953343d8 > .form {\n    text-align: center;\n  }\n  ._953343d8 input {\n    padding: 5px 10px;\n  }") || true) && "_953343d8";
-
-module.exports = function () {
-  var child = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
-  return function (state, prev, send) {
-    var onSubmit = function onSubmit(e) {
-      e.preventDefault();
-      send('login:submit');
-    };
-
-    var onAttrChange = function onAttrChange(key) {
-      return function (e) {
-        return send('login:updateForm', { key: key, value: e.target.value });
-      };
-    };
-    var onUsernameChange = onAttrChange('username');
-    var onPasswordChange = onAttrChange('password');
-
-    return html(_templateObject, styles, onSubmit, state.login.form.username, onUsernameChange, state.login.submitted && state.login.validation.username ? html(_templateObject2) : null, state.login.form.password, onPasswordChange, state.login.submitted && state.login.validation.password ? html(_templateObject3) : null, state.login.submitting ? 'Submitting' : null);
+module.exports = (child = () => {}) => (state, prev, send) => {
+  const onSubmit = e => {
+    e.preventDefault();
+    send('login:submit');
   };
+
+  const onAttrChange = key => e => send('login:updateForm', { key, value: e.target.value });
+  const onUsernameChange = onAttrChange('username');
+  const onPasswordChange = onAttrChange('password');
+
+  return html`
+    <div class=${ styles }>
+      <form
+        onsubmit=${ onSubmit }
+        class="form"
+      >
+        <div>
+          <label>
+            Username
+          </label>
+          <input
+            type="text"
+            value=${ state.login.form.username }
+            onchange=${ onUsernameChange }
+          />
+          ${ state.login.submitted && state.login.validation.username ? html`
+              <small>
+                Username is required
+              </small>
+            ` : null }
+        </div>
+
+        <div>
+          <label>
+            Password
+          </label>
+          <input
+            type="password"
+            value=${ state.login.form.password }
+            onchange=${ onPasswordChange }
+          />
+          ${ state.login.submitted && state.login.validation.password ? html`
+              <small>
+                Password is required
+              </small>
+            ` : null }
+        </div>
+
+        <button
+          type="submit"
+        >
+          Login
+        </button>
+      </form>
+
+      <div>
+        ${ state.login.submitting ? 'Submitting' : null }
+      </div>
+    </div>
+  `;
 };
 
 },{"choo/html":15,"sheetify/insert":33}],46:[function(require,module,exports){
-'use strict';
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _templateObject = _taggedTemplateLiteral(['\n    <div onload=', '>\n      ', '\n      ', '\n      ', '\n      ', '\n      ', '\n    </div>\n  '], ['\n    <div onload=', '>\n      ', '\n      ', '\n      ', '\n      ', '\n      ', '\n    </div>\n  ']);
+const html = require('choo/html');
+const TitleBar = require('../components/TitleBar');
+const TodosList = require('../components/TodosList');
+const AddNewTodoForm = require('../components/AddNewTodoForm');
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+module.exports = (child = () => {}) => (state, prev, send) => {
+  const requestTodos = () => send('todos:requestTodos');
+  const onChange = value => send('todos:setNewTodoValue', { value });
+  const onSubmit = () => send('todos:addTodo', { title: state.todos.addNewTodoValue });
+  const onToggle = todo => send('todos:updateTodo', {
+    todo: _extends({}, todo, { complete: !todo.complete })
+  });
 
-var html = require('choo/html');
-var TitleBar = require('../components/TitleBar');
-var TodosList = require('../components/TodosList');
-var AddNewTodoForm = require('../components/AddNewTodoForm');
-
-module.exports = function () {
-  var child = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
-  return function (state, prev, send) {
-    var requestTodos = function requestTodos() {
-      return send('todos:requestTodos');
-    };
-    var onChange = function onChange(value) {
-      return send('todos:setNewTodoValue', { value: value });
-    };
-    var onSubmit = function onSubmit() {
-      return send('todos:addTodo', { title: state.todos.addNewTodoValue });
-    };
-    var onToggle = function onToggle(todo) {
-      return send('todos:updateTodo', {
-        todo: _extends({}, todo, { complete: !todo.complete })
-      });
-    };
-
-    return html(_templateObject, requestTodos, TitleBar({ title: 'Choodo' }), AddNewTodoForm({ value: state.todos.addNewTodoValue, onChange: onChange, onSubmit: onSubmit }), TodosList({ todos: state.todos.todos, onToggle: onToggle }), state.todos.loading === true ? 'Loading' : null, child(state, prev, send));
-  };
+  return html`
+    <div onload=${ requestTodos }>
+      ${ TitleBar({ title: 'Choodo' }) }
+      ${ AddNewTodoForm({ value: state.todos.addNewTodoValue, onChange, onSubmit }) }
+      ${ TodosList({ todos: state.todos.todos, onToggle }) }
+      ${ state.todos.loading === true ? 'Loading' : null }
+      ${ child(state, prev, send) }
+    </div>
+  `;
 };
 
 },{"../components/AddNewTodoForm":1,"../components/TitleBar":2,"../components/TodosList":4,"choo/html":15}],47:[function(require,module,exports){
-'use strict';
-
-var todos = require('./Todos');
-var login = require('./Login');
+const todos = require('./Todos');
+const login = require('./Login');
 
 module.exports = [['/todos', todos(), [['/test', todos(login())]]], ['/login', login()]];
 
 },{"./Login":45,"./Todos":46}],48:[function(require,module,exports){
-'use strict';
-
 module.exports = {
-  onError: function onError(err, state, createSend) {
+  onError: function (err, state, createSend) {
     console.trace();
-    console.groupCollapsed('Error: ' + err.message);
+    console.groupCollapsed(`Error: ${ err.message }`);
     console.error(err);
     console.groupEnd();
-    var send = createSend('onError: ');
+    const send = createSend('onError: ');
     send('app:error', err);
   },
-  onAction: function onAction(state, data, name, caller, createSend) {
-    console.groupCollapsed('Action: ' + caller + ' -> ' + name);
+  onAction: function (state, data, name, caller, createSend) {
+    console.groupCollapsed(`Action: ${ caller } -> ${ name }`);
     console.log(data);
     console.groupEnd();
   },
-  onStateChange: function onStateChange(state, data, prev, createSend) {
+  onStateChange: function (state, data, prev, createSend) {
     console.groupCollapsed('State');
     console.log(prev);
     console.log(state);
@@ -5240,14 +5218,12 @@ module.exports = {
 };
 
 },{}],49:[function(require,module,exports){
-"use strict";
+const timeout = 1000;
 
-var timeout = 1000;
-
-var store = {
-  getAll: function getAll(storeName) {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
+const store = {
+  getAll: storeName => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
         try {
           resolve(JSON.parse(window.localStorage[storeName]));
         } catch (e) {
@@ -5256,10 +5232,10 @@ var store = {
       }, timeout);
     });
   },
-  add: function add(storeName, item) {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
-        store.getAll(storeName).then(function (items) {
+  add: (storeName, item) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        store.getAll(storeName).then(items => {
           items.push(item);
           window.localStorage[storeName] = JSON.stringify(items);
           resolve(item);
@@ -5267,10 +5243,10 @@ var store = {
       }, timeout);
     });
   },
-  replace: function replace(storeName, index, item) {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
-        store.getAll(storeName).then(function (items) {
+  replace: (storeName, index, item) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        store.getAll(storeName).then(items => {
           items[index] = item;
           window.localStorage[storeName] = JSON.stringify(items);
           resolve(item);
