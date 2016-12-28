@@ -1,3 +1,5 @@
+const loginFactory = require('../factories/login')
+const passport = require('../transport/passport')
 const validate = require('validate.js')
 
 const formRules = () => {
@@ -11,10 +13,7 @@ module.exports = () => ({
   namespace: 'login',
 
   state: {
-    form: {
-      username: '',
-      password: ''
-    },
+    form: loginFactory.empty(),
     submitting: false,
     submitted: false,
     validation: {}
@@ -47,13 +46,14 @@ module.exports = () => ({
     submit (state, payload, send, done) {
       send('login:validateForm', done)
       send('login:setSubmitted', { submitted: true }, done)
-      const isValid = false
-      if (isValid) {
-        send('login:setSubmitting', { submitting: true }, done)
-        setTimeout(() => {
-          send('login:setSubmitting', { submitting: false }, done)
-        }, 1000)
-      }
+      send('login:setSubmitting', { submitting: true }, done)
+
+      passport.login({ payload }).then(response => {
+        console.log(response)
+        send('login:setSubmitting', { submitting: false }, done)
+      }).catch(() => {
+        send('login:setSubmitting', { submitting: false }, done)
+      })
     }
   }
 })

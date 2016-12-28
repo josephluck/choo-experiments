@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && npm run minify && node server.js",
-    "dev": "budo index.js --live --pushstate --base=/ --onupdate \"standard | notify-error\" -- -t babelify -t sheetify/transform",
+    "dev": "budo index.js --live --pushstate --host=localhost --port=8888 --base=/ --onupdate \"standard | notify-error\" -- -t babelify -t sheetify/transform",
     "build": "browserify -t [ sheetify/transform ] -t [ envify ] -g [ yo-yoify ] -g [ unassertify ] -t [ babelify --presets [ es2015 ] ] -g [ uglifyify ] index.js > ./build/assets/bundle.js",
     "minify": "uglifyjs --compress --mangle --output=./build/assets/bundle.min.js -- ./build/assets/bundle.js",
     "lint": "standard",
@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "choo": "^4.0.3",
+    "rest": "^2.0.0",
     "sheetify": "^6.0.1",
     "validate.js": "^0.11.1"
   },

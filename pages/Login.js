@@ -13,7 +13,7 @@ const styles = css`
 module.exports = (child = () => {}) => (state, prev, send) => {
   const onSubmit = (e) => {
     e.preventDefault()
-    send('login:submit')
+    send('login:submit', state.login.form)
   }
 
   const onAttrChange = (key) => (e) => send('login:updateForm', { key, value: e.target.value })
