@@ -1,6 +1,8 @@
 const timeout = 1000
 
 const store = {
+  state: {},
+
   getAll: (storeName) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -12,6 +14,7 @@ const store = {
       }, timeout)
     })
   },
+
   add: (storeName, item) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -23,6 +26,7 @@ const store = {
       }, timeout)
     })
   },
+
   replace: (storeName, index, item) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {

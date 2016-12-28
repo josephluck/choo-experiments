@@ -3,55 +3,38 @@ const mime = require('rest/interceptor/mime')
 const errorCode = require('rest/interceptor/errorCode')
 const pathPrefix = require('rest/interceptor/pathPrefix')
 const config = require('../utils/config')
+const store = require('../utils/store')
 
-const handleRequestError = () => {
-  return err => {
-    throw new Error(err)
-  }
+const handleRequestError = () => err => {
+  throw new Error(err)
 }
 
-const handleRequestResponse = () => response => response.entity.data
-
+const handleRequestResponse = () => (response) => response.entity.data
 const getBaseClient = () => rest.wrap(errorCode).wrap(pathPrefix, { prefix: config.apiBase })
 const getFormClient = () => getBaseClient().wrap(mime, { mime: 'application/x-www-form-urlencoded' })
 const getJsonClient = () => getBaseClient().wrap(mime, { mime: 'application/json' })
 
 module.exports = {
   makeFormRequest (request) {
+    const handleResponse = () => (response) => response.entity
     const make = getFormClient()
-
-    return make(request)
-      .then(response => response.entity)
-      .catch(handleRequestError())
+    return make(request).then(handleResponse()).catch(handleRequestError())
   },
 
-  /**
-  * Make a request disregarding authentication
-  * @param  {Object} request The request object
-  * @return {Promise}
-  */
   makeUnauthenticatedRequest (request) {
     const make = getJsonClient()
-
     return make(request).then(handleRequestResponse()).catch(handleRequestError())
   },
 
-  /**
-   * Make a request having ensured we are still authenticated
-   * @param  {Object} request The request object
-   * @return {Promise}
-   */
-  makeRequest (request) {
+  makeRequest (req) {
     const make = getJsonClient()
-
-    const requestWithHeaders = {
-      ...request,
+    const request = {
+      ...req,
       headers: {
-        Authorization: 'token',
-        ...request.headers
+        Authorization: `Bearer ${store.state.auth.accessToken}`,
+        ...req.headers
       }
     }
-
-    return make(requestWithHeaders).then(handleRequestResponse()).catch(handleRequestError())
+    return make(request).then(handleRequestResponse()).catch(handleRequestError())
   }
 }

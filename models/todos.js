@@ -1,5 +1,5 @@
 module.exports = ({
-  store
+  store = require('../utils/store')
 }) => ({
   namespace: 'todos',
 

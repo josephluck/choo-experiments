@@ -5,9 +5,7 @@ const empty = () => {
   }
 }
 
-const create = (data) => {
-  return Object.assign({}, empty(), data)
-}
+const create = (data) => ({ ...empty(), ...data })
 
 module.exports = {
   empty,

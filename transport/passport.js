@@ -9,5 +9,12 @@ module.exports = {
         grant_type: 'password'
       }
     })
+  },
+
+  fetchUser ({ userId }) {
+    return transport.makeRequest({
+      path: `/passport/${userId}`,
+      method: 'GET'
+    })
   }
 }

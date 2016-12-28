@@ -1,5 +1,6 @@
+require('jsdom-global')()
 const test = require('tape')
-const todos = require('./todos')({})
+const todos = require('./todos')
 
 test('MODELS / todos / receive todos', function (t) {
   t.plan(3)
@@ -10,7 +11,7 @@ test('MODELS / todos / receive todos', function (t) {
   }
   const payload = { todos: [ 'todo' ] }
 
-  const newState = todos.reducers.receiveTodos(state, payload)
+  const newState = todos({}).reducers.receiveTodos(state, payload)
 
   t.equal(newState.todos.length, 1, 'Should receive todos')
   t.equal(newState.todos[0], 'todo', 'Should receive the correct todos')
@@ -26,7 +27,7 @@ test('MODELS / todos / receive todo', function (t) {
   }
   const payload = { todo: 'todo 2' }
 
-  const newState = todos.reducers.receiveTodo(state, payload)
+  const newState = todos({}).reducers.receiveTodo(state, payload)
 
   t.equal(newState.todos.length, 2, 'Should add a new todo')
   t.equal(newState.todos[1], 'todo 2', 'Should add the correct todo')
@@ -45,7 +46,7 @@ test('MODELS / todos / receive todo update', function (t) {
   const editedTodo = { title: 'todo 2 edited', uuid: 2 }
   const payload = { todo: editedTodo }
 
-  const newState = todos.reducers.receiveTodoUpdate(state, payload)
+  const newState = todos({}).reducers.receiveTodoUpdate(state, payload)
 
   t.equal(newState.todos.length, 2, 'The length of the existing todos should be unchanged')
   t.deepEqual(newState.todos[1], editedTodo, 'The second todo should be updated')

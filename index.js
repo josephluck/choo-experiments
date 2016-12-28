@@ -11,3 +11,4 @@ models.forEach((model) => app.model(model))
 app.router(pages)
 
 document.body.appendChild(app.start())
+module.exports = app

@@ -1,6 +1,6 @@
+require('jsdom-global')()
 const test = require('tape')
 const sinon = require('sinon')
-require('jsdom-global')()
 const Login = require('./Login')
 
 test('PAGES / login / render', function (t) {
