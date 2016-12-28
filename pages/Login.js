@@ -74,6 +74,7 @@ module.exports = (child = () => {}) => (state, prev, send) => {
       <div>
         ${state.login.submitting ? 'Submitting' : null}
       </div>
+      ${child(state, prev, send)}
     </div>
   `
 }
