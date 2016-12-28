@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build && npm run minify && node server.js",
     "dev": "budo index.js --live --pushstate --base=/ --onupdate \"standard | notify-error\" -- -t babelify -t sheetify/transform",
-    "build": "browserify -t [ sheetify/transform ] -t [ babelify --presets [ es2015 ] ] index.js > ./build/assets/bundle.js",
+    "build": "browserify -t [ sheetify/transform ] -t [ envify ] -g [ yo-yoify ] -g [ unassertify ] -t [ babelify --presets [ es2015 ] ] -g [ uglifyify ] index.js > ./build/assets/bundle.js",
     "minify": "uglifyjs --compress --mangle --output=./build/assets/bundle.min.js -- ./build/assets/bundle.js",
     "lint": "standard",
     "unit": "tape -r babel-register **/*.unit.js | tap-spec",
@@ -29,6 +29,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
     "budo": "^9.3.0",
+    "envify": "^4.0.0",
     "express": "^4.14.0",
     "jsdom": "^9.9.1",
     "jsdom-global": "^2.1.1",
@@ -39,6 +40,10 @@
     "tachyons": "^4.6.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3",
-    "uglify-js": "^2.7.5"
+    "tape-watch": "^2.2.4",
+    "uglify-js": "^2.7.5",
+    "uglifyify": "^3.0.4",
+    "unassertify": "^2.0.4",
+    "yo-yoify": "^3.5.0"
   }
 }
