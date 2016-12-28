@@ -1,6 +1,6 @@
+const validate = require('validate.js')
 const loginFactory = require('../factories/login')
 const passport = require('../transport/passport')
-const validate = require('validate.js')
 
 const formRules = () => {
   return {
@@ -49,7 +49,12 @@ module.exports = () => ({
       send('login:setSubmitting', { submitting: true }, done)
 
       passport.login({ payload }).then(response => {
-        console.log(response)
+        const tokens = {
+          accessToken: response.access_token,
+          refreshToken: response.refresh_token,
+          expiresIn: response.expires_in
+        }
+        send('auth:receiveTokens', tokens, done)
         send('login:setSubmitting', { submitting: false }, done)
       }).catch(() => {
         send('login:setSubmitting', { submitting: false }, done)
