@@ -1,9 +1,11 @@
 const todos = require('./Todos')
 const login = require('./Login')
+const dashboard = require('./Dashboard')
 
-module.exports = [
+module.exports = () => ([
   ['/todos', todos(), [
     ['/test', todos(login())]
   ]],
-  ['/login', login()]
-]
+  ['/login', login()],
+  ['/dashboard', dashboard()]
+])

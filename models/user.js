@@ -4,7 +4,7 @@ module.exports = ({
   namespace: 'user',
 
   state: {
-    user: null
+    user: {}
   },
 
   reducers: {
@@ -17,6 +17,7 @@ module.exports = ({
     fetch (state, payload, send, done) {
       return passport.fetchUser({ userId: payload.userId }).then((user) => {
         send('user:receiveUser', { user }, done)
+        return user
       })
     }
   }

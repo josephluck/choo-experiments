@@ -39,28 +39,28 @@ module.exports = ({
   },
 
   effects: {
-    updateForm (state, payload, send, done) {
-      send('login:updateKey', payload, done)
-      send('login:validateForm', done)
+    updateForm: async (state, payload, send, done) => {
+      await send('login:updateKey', payload)
+      await send('login:validateForm')
     },
 
-    submit (state, payload, send, done) {
-      send('login:validateForm', done)
-      send('login:setSubmitted', { submitted: true }, done)
-      send('login:setSubmitting', { submitting: true }, done)
+    submit: async (state, { payload, cb }, send, done) => {
+      await send('login:validateForm')
+      await send('login:setSubmitted', { submitted: true })
+      await send('login:setSubmitting', { submitting: true })
 
-      passport.login({ payload }).then(response => {
-        const tokens = {
-          accessToken: response.access_token,
-          refreshToken: response.refresh_token,
-          expiresIn: response.expires_in
-        }
-        send('auth:receiveTokens', tokens, done)
-        send('auth:initialise', {}, done)
-        send('login:setSubmitting', { submitting: false }, done)
-      }).catch(() => {
-        send('login:setSubmitting', { submitting: false }, done)
-      })
+      const response = await passport.login({ payload })
+
+      const tokens = {
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token,
+        expiresIn: response.expires_in
+      }
+
+      await send('auth:receiveTokens', tokens)
+      await send('auth:initialise', {})
+      await send('login:setSubmitting', { submitting: false })
+      cb()
     }
   }
 })

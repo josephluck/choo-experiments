@@ -1,6 +1,4 @@
-const store = require('./store')
-
-module.exports = {
+module.exports = () => ({
   onError: function (err, state, createSend) {
     console.trace()
     console.groupCollapsed(`Error: ${err.message}`)
@@ -15,11 +13,10 @@ module.exports = {
     console.groupEnd()
   },
   onStateChange: function (state, data, prev, createSend) {
-    store.state = state
     console.groupCollapsed('State')
     console.log(prev)
     console.log(state)
     console.groupEnd()
     console.info('--------------------------------')
   }
-}
+})

@@ -9,11 +9,7 @@ const createPassportMock = () => ({
 })
 
 const createLoginFactory = () => ({
-  empty () {
-    return {
-      username: ''
-    }
-  }
+  empty: sinon.stub()
 })
 
 const createLogin = () => {
