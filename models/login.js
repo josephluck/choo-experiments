@@ -59,7 +59,7 @@ module.exports = ({
 
       await send('login:setSubmitting', { submitting: true })
 
-      const response = await passport.login({ form })
+      const response = await passport.login({ payload: form })
 
       await send('login:setSubmitting', { submitting: false })
 

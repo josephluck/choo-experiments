@@ -19,10 +19,14 @@ module.exports = ({
     ...values,
     password: e.target.value
   })
+  const submit = (e) => {
+    e.preventDefault()
+    onSubmit(values)
+  }
 
   return html`
     <form
-      onsubmit=${onSubmit}
+      onsubmit=${submit}
       class="form"
     >
       <div class="mt3">

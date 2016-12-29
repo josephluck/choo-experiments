@@ -14,19 +14,9 @@ const styles = css`
 `
 
 module.exports = (child = noop) => (state, prev, send) => {
-  const onSubmit = (e) => {
-    e.preventDefault()
-    send('login:submit', {
-      form: state.login.form,
-      cb: () => {
-        send('location:set', 'dashboard')
-      }
-    })
-  }
-
-  const onChange = (form) => {
-    send('login:updateForm', { form })
-  }
+  const cb = () => send('location:set', 'dashboard')
+  const onSubmit = (form) => send('login:submit', { form, cb })
+  const onChange = (form) => send('login:updateForm', { form })
 
   return html`
     <div class=${styles}>
