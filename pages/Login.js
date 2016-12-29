@@ -13,6 +13,12 @@ const styles = css`
   }
 `
 
+const formStyles = css`
+  input {
+    background: orange;
+  }
+`
+
 module.exports = (child = noop) => (state, prev, send) => {
   const cb = () => send('location:set', 'dashboard')
   const onSubmit = (form) => send('login:submit', { form, cb })
@@ -21,6 +27,7 @@ module.exports = (child = noop) => (state, prev, send) => {
   return html`
     <div class=${styles}>
       ${LoginForm({
+        styles: formStyles,
         onSubmit,
         onChange,
         values: state.login.form,

@@ -1,6 +1,13 @@
 const html = require('choo/html')
+const css = require('sheetify')
 const noop = () => {}
 const emptyLogin = require('../factories/login').empty
+
+const defaultStyles = css`
+  input {
+    background: teal;
+  }
+`
 
 module.exports = ({
   onSubmit = noop,
@@ -9,7 +16,8 @@ module.exports = ({
   submitted = false,
   submitting = false,
   valid = false,
-  validation = {}
+  validation = {},
+  styles = defaultStyles
 }) => {
   const onUsernameChange = (e) => onChange({
     ...values,
@@ -27,7 +35,7 @@ module.exports = ({
   return html`
     <form
       onsubmit=${submit}
-      class="form"
+      class=${styles}
     >
       <div class="mt3">
         <label>
