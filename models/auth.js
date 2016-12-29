@@ -41,6 +41,14 @@ module.exports = () => {
           return
         }
         onError('No access token in state')
+      },
+
+      clearTokens (state, payload, send) {
+        send('auth:receiveTokens', {
+          accessToken: null,
+          refreshToken: null,
+          expiresIn: null
+        })
       }
     }
   }
