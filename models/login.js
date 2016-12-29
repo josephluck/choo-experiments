@@ -9,21 +9,16 @@ module.exports = ({
 
   state: {
     form: loginFactory.empty(),
-    valid: false,
+    valid: true,
     submitting: false,
     submitted: false,
     validation: {}
   },
 
   reducers: {
-    updateKey: function (state, { key, value }) {
-      return {
-        ...state,
-        form: {
-          ...state.form,
-          [key]: value
-        }
-      }
+    replaceForm: function (state, { form }) {
+      console.log(form)
+      return { ...state, form: { ...state.form, ...form } }
     },
 
     validateForm: function (state) {
@@ -51,12 +46,12 @@ module.exports = ({
   },
 
   effects: {
-    updateForm: async function (state, payload, send, done) {
-      await send('login:updateKey', payload)
+    updateForm: async function (state, { form }, send, done) {
+      await send('login:replaceForm', { form })
       await send('login:validateForm')
     },
 
-    submit: async function (state, { payload, cb }, send, done) {
+    submit: async function (state, { form, cb }, send, done) {
       await send('login:setSubmitted', { submitted: true })
       await send('login:validateForm')
 
@@ -64,7 +59,7 @@ module.exports = ({
 
       await send('login:setSubmitting', { submitting: true })
 
-      const response = await passport.login({ payload })
+      const response = await passport.login({ form })
 
       await send('login:setSubmitting', { submitting: false })
 
