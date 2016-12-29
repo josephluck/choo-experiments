@@ -31,11 +31,11 @@ test('MODELS / login / update form', function (t) {
   }
 
   const payload = {
-    key: 'username',
-    value: 'Gazza'
+    username: 'username',
+    password: 'gazza'
   }
 
-  const newState = createLogin().reducers.updateKey(state, payload)
+  const newState = createLogin().reducers.replaceForm(state, payload)
 
   t.equal(newState.form.username, 'Gazza', 'Should receive login')
   t.equal(newState.shouldBeLeftUnchanged, true, 'Should retain other state')

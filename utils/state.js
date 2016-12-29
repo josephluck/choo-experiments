@@ -11,10 +11,7 @@ module.exports = () => ({
     // an effect is called.
     // Consider refactoring app if performance is a problem
     return (state, payload, send, done) => {
-      fn({
-        ...state,
-        $root: store.state
-      }, payload, send, done)
+      fn({ ...state, $root: store.state }, payload, send, done)
     }
   }
 })
