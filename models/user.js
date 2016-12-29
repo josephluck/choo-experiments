@@ -14,11 +14,9 @@ module.exports = ({
   },
 
   effects: {
-    fetch (state, payload, send, done) {
-      return passport.fetchUser({ userId: payload.userId }).then((user) => {
-        send('user:receiveUser', { user }, done)
-        return user
-      })
+    fetch: async (state, payload, send, done) => {
+      const user = await passport.fetchUser({ userId: payload.userId })
+      await send('user:receiveUser', { user })
     }
   }
 })

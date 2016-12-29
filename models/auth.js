@@ -23,7 +23,8 @@ module.exports = () => ({
   effects: {
     initialise: async (state, payload, send, done) => {
       const user = { userId: jwtDecode(state.accessToken).sub }
-      await send('user:fetch', user)
+      const fetchUser = send('user:fetch', user)
+      await Promise.all([ fetchUser ])
     }
   }
 })
