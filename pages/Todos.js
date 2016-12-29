@@ -13,6 +13,7 @@ module.exports = (child = () => {}) => (state, prev, send) => {
 
   return html`
     <div onload=${requestTodos}>
+      <a href="/dashboard">Dashboard</a>
       ${TitleBar({ title: 'Choodo' })}
       ${AddNewTodoForm({ value: state.todos.addNewTodoValue, onChange, onSubmit })}
       ${TodosList({ todos: state.todos.todos, onToggle })}

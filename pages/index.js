@@ -1,11 +1,12 @@
+const requireAuth = require('./RequireAuth')
 const todos = require('./Todos')
 const login = require('./Login')
 const dashboard = require('./Dashboard')
 
 module.exports = () => ([
-  ['/todos', todos(), [
-    ['/test', todos(login())]
+  ['/todos', requireAuth(todos()), [
+    ['/test', requireAuth(todos(login()))]
   ]],
   ['/login', login()],
-  ['/dashboard', dashboard()]
+  ['/dashboard', requireAuth(dashboard())]
 ])

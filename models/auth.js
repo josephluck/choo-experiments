@@ -21,10 +21,16 @@ module.exports = () => ({
   },
 
   effects: {
-    initialise: async (state, payload, send, done) => {
-      const user = { userId: jwtDecode(state.accessToken).sub }
-      const fetchUser = send('user:fetch', user)
-      await Promise.all([ fetchUser ])
+    check: async (state, { onError }, send, done) => {
+      if (state.accessToken) {
+        const user = { userId: jwtDecode(state.accessToken).sub }
+        const fetchUser = state.$root.user.user.id ? Promise.resolve() : send('user:fetch', user)
+        await Promise.all([ fetchUser ])
+        return
+      }
+      if (onError) {
+        onError('No access token in state')
+      }
     }
   }
 })

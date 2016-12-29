@@ -17,6 +17,5 @@ module.exports = () => ({
     console.log(prev)
     console.log(state)
     console.groupEnd()
-    console.info('--------------------------------')
   }
 })

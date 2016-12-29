@@ -58,7 +58,6 @@ module.exports = ({
       }
 
       await send('auth:receiveTokens', tokens)
-      await send('auth:initialise', {})
       await send('login:setSubmitting', { submitting: false })
       cb()
     }
