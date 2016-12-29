@@ -5,10 +5,10 @@ const store = {
 
   init (models) {
     this.state = models.reduce((prev, curr) => {
-      return {
-        ...prev,
-        [curr.namespace]: curr.state
+      if (curr.namespace) {
+        return { ...prev, [curr.namespace]: curr.state }
       }
+      return { ...prev, ...curr.state }
     }, {})
   },
 
