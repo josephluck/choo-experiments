@@ -1,13 +1,26 @@
-const empty = () => {
+const rules = function () {
   return {
-    username: 'harry25190@goodlord.co',
-    password: 'password'
+    username: { presence: true },
+    password: { presence: true }
   }
 }
 
-const create = (data) => ({ ...empty(), ...data })
+const empty = function () {
+  return {
+    username: 'wall-e@goodlord.co',
+    password: 'CorrectHorseBatteryStaple'
+  }
+}
+
+const create = function (data) {
+  return {
+    ...empty(),
+    ...data
+  }
+}
 
 module.exports = {
+  rules,
   empty,
   create
 }

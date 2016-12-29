@@ -1,5 +1,6 @@
 const html = require('choo/html')
 const css = require('sheetify')
+const noop = () => {}
 
 const styles = css`
   :host > .form {
@@ -10,7 +11,7 @@ const styles = css`
   }
 `
 
-module.exports = (child = () => {}) => (state, prev, send) => {
+module.exports = (child = noop) => (state, prev, send) => {
   const onSubmit = (e) => {
     e.preventDefault()
     send('login:submit', {
@@ -72,6 +73,7 @@ module.exports = (child = () => {}) => (state, prev, send) => {
 
         <button
           type="submit"
+          disabled=${state.login.submitted && !state.login.valid}
         >
           Login
         </button>

@@ -1,3 +1,4 @@
+require('babel-polyfill')
 const choo = require('choo')
 const css = require('sheetify')
 
