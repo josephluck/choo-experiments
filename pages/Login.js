@@ -20,8 +20,6 @@ module.exports = (child = noop) => (state, prev, send) => {
 
   return html`
     <div class=${styles}>
-      <a href="dashboard">Dashboard</a>
-
       ${LoginForm({
         onSubmit,
         onChange,

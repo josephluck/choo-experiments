@@ -5,6 +5,7 @@ const css = require('sheetify')
 const promisify = require('./utils/promisify')
 const log = require('choo-log')
 const state = require('./utils/state')
+const store = require('./utils/store')
 
 const pages = require('./pages')
 const models = require('./models')
@@ -18,6 +19,8 @@ app.use(promisify())
 app.use(log()) // <-- turn off if production
 
 models.forEach((model) => app.model(model))
+
+store.init(app._store._models)
 
 app.router(pages())
 

@@ -3,6 +3,15 @@ const timeout = 1000
 const store = {
   state: {},
 
+  init (models) {
+    this.state = models.reduce((prev, curr) => {
+      return {
+        ...prev,
+        [curr.namespace]: curr.state
+      }
+    }, {})
+  },
+
   getAll: (storeName) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
