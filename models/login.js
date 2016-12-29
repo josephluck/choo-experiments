@@ -17,7 +17,6 @@ module.exports = ({
 
   reducers: {
     replaceForm: function (state, { form }) {
-      console.log(form)
       return { ...state, form: { ...state.form, ...form } }
     },
 

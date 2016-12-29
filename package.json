@@ -33,6 +33,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
     "budo": "^9.3.0",
+    "choo-log": "^3.0.0",
     "css-extract": "^1.2.0",
     "envify": "^4.0.0",
     "express": "^4.14.0",

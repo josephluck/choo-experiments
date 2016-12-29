@@ -3,7 +3,7 @@ const choo = require('choo')
 const css = require('sheetify')
 
 const promisify = require('./utils/promisify')
-const debug = require('./utils/debug')
+const log = require('choo-log')
 const state = require('./utils/state')
 
 const pages = require('./pages')
@@ -15,7 +15,7 @@ const app = choo()
 
 app.use(state())
 app.use(promisify())
-app.use(debug()) // <-- turn off if production
+app.use(log()) // <-- turn off if production
 
 models.forEach((model) => app.model(model))
 
