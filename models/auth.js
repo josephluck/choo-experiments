@@ -1,40 +1,47 @@
 const jwtDecode = require('jwt-decode')
+const sync = require('./middleware/sync')
 
-module.exports = () => ({
-  namespace: 'auth',
+module.exports = () => {
+  const storedTokens = window.localStorage.getItem('tokens')
+  const tokens = storedTokens ? JSON.parse(storedTokens) : {}
+  const state = {
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    expiresIn: tokens.expiresIn
+  }
 
-  state: {
-    accessToken: null,
-    refreshToken: null,
-    expiresIn: null
-  },
+  return {
+    namespace: 'auth',
 
-  reducers: {
-    receiveTokens (state, { accessToken, refreshToken, expiresIn }) {
-      return {
-        ...state,
-        accessToken,
-        refreshToken,
-        expiresIn
+    state,
+
+    reducers: {
+      receiveTokens: sync('tokens', (state, { accessToken, refreshToken, expiresIn }) => {
+        return {
+          ...state,
+          accessToken,
+          refreshToken,
+          expiresIn
+        }
+      })
+    },
+
+    effects: {
+      check: async (state, { onError = () => {} }, send, done) => {
+        if (state.accessToken) {
+          const userExists = !!state.$root.user.user.id
+          const fetchUser = !userExists
+            ? send('user:fetch', {
+              userId: jwtDecode(state.accessToken).sub
+            })
+            : Promise.resolve()
+
+          await Promise.all([ fetchUser ])
+
+          return
+        }
+        onError('No access token in state')
       }
-    }
-  },
-
-  effects: {
-    check: async (state, { onError = () => {} }, send, done) => {
-      if (state.accessToken) {
-        const userExists = !!state.$root.user.user.id
-        const fetchUser = !userExists
-          ? send('user:fetch', {
-            userId: jwtDecode(state.accessToken).sub
-          })
-          : Promise.resolve()
-
-        await Promise.all([ fetchUser ])
-
-        return
-      }
-      onError('No access token in state')
     }
   }
-})
+}
