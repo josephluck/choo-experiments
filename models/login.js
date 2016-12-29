@@ -48,18 +48,15 @@ module.exports = ({
       await send('login:validateForm')
       await send('login:setSubmitted', { submitted: true })
       await send('login:setSubmitting', { submitting: true })
-
       const response = await passport.login({ payload })
-
-      const tokens = {
+      await send('login:setSubmitting', { submitting: false })
+      if (response.code === 403) { return }
+      await send('auth:receiveTokens', {
         accessToken: response.access_token,
         refreshToken: response.refresh_token,
         expiresIn: response.expires_in
-      }
-
-      await send('auth:receiveTokens', tokens)
-      await send('login:setSubmitting', { submitting: false })
-      cb()
+      })
+      return cb()
     }
   }
 })

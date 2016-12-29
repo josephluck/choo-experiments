@@ -1,13 +1,15 @@
-const requireAuth = require('./RequireAuth')
-const redirectIfAuthenticated = require('./RedirectIfAuthenticated')
+const requireAuth = require('./middleware/requireAuth')
+const setPageTitle = require('./middleware/setPageTitle')
+const redirectIfAuthenticated = require('./middleware/redirectIfAuthenticated')
+
 const todos = require('./Todos')
 const login = require('./Login')
 const dashboard = require('./Dashboard')
 
 module.exports = () => ([
-  ['/login', redirectIfAuthenticated(login())],
-  ['/todos', requireAuth(todos()), [
-    ['/test', requireAuth(todos(login()))]
+  [ '/login', setPageTitle('Login', redirectIfAuthenticated(login())) ],
+  [ '/todos', setPageTitle('Todos', requireAuth(todos())), [
+    [ '/test', setPageTitle('Todos - Test', requireAuth(todos(login()))) ]
   ]],
-  ['/dashboard', requireAuth(dashboard())]
+  [ '/dashboard', setPageTitle('Dashboard', requireAuth(dashboard())) ]
 ])

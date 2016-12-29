@@ -6,7 +6,10 @@ const config = require('../utils/config')
 const store = require('../utils/store')
 
 const handleRequestError = () => err => {
-  throw new Error(err)
+  return {
+    code: err.status.code,
+    message: err.entity.error_description
+  }
 }
 
 const handleRequestResponse = () => (response) => response.entity.data

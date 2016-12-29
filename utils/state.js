@@ -7,8 +7,8 @@ module.exports = () => ({
 
   wrapEffects: function (fn) {
     return (state, payload, send, done) => {
-      const newState = { ...state, $root: store.state }
-      fn(newState, payload, send, done)
+      state['$root'] = store.state
+      fn(state, payload, send, done)
     }
   }
 })
