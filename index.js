@@ -1,7 +1,7 @@
 const choo = require('choo')
 const css = require('sheetify')
 
-const promisify = require('barracks-promisify-plugin')
+const promisify = require('./utils/promisify')
 const debug = require('./utils/debug')
 const state = require('./utils/state')
 
