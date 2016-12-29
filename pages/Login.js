@@ -27,6 +27,7 @@ module.exports = (child = () => {}) => (state, prev, send) => {
 
   return html`
     <div class=${styles}>
+      <a href="dashboard">Dashboard</a>
       <form
         onsubmit=${onSubmit}
         class="form"
