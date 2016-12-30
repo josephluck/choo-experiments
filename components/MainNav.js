@@ -32,7 +32,12 @@ module.exports = ({
       })}
 
       <br />
-      <a onclick=${onLogoutClick}>Logout</a>
+
+      <a
+        onclick=${onLogoutClick}
+      >
+        Logout
+      </a>
     </div>
   `
 }
