@@ -1,13 +1,6 @@
 const html = require('choo/html')
-const css = require('sheetify')
 const noop = () => {}
 const emptyLogin = require('../factories/login').empty
-
-const defaultStyles = css`
-  input {
-    background: teal;
-  }
-`
 
 module.exports = ({
   onSubmit = noop,
@@ -17,7 +10,7 @@ module.exports = ({
   submitting = false,
   valid = false,
   validation = {},
-  styles = defaultStyles
+  styles = ''
 }) => {
   const onUsernameChange = (e) => onChange({
     ...values,

@@ -41,7 +41,7 @@ var _extends = Object.assign || function (target) {
 };
 var _templateObject = _taggedTemplateLiteral([
         '\n    <form\n      onsubmit=',
-        '\n      class="form"\n    >\n      <div class="mt3">\n        <label>\n          Username\n        </label>\n        <input\n          type="text"\n          value=',
+        '\n    >\n      <div class="mt3">\n        <label>\n          Username\n        </label>\n        <input\n          type="text"\n          value=',
         '\n          onchange=',
         '\n        />\n        ',
         '\n      </div>\n\n      <div>\n        <label>\n          Password\n        </label>\n        <input\n          type="password"\n          value=',
@@ -51,7 +51,7 @@ var _templateObject = _taggedTemplateLiteral([
         '\n      >\n        Login\n      </button>\n    </form>\n  '
     ], [
         '\n    <form\n      onsubmit=',
-        '\n      class="form"\n    >\n      <div class="mt3">\n        <label>\n          Username\n        </label>\n        <input\n          type="text"\n          value=',
+        '\n    >\n      <div class="mt3">\n        <label>\n          Username\n        </label>\n        <input\n          type="text"\n          value=',
         '\n          onchange=',
         '\n        />\n        ',
         '\n      </div>\n\n      <div>\n        <label>\n          Password\n        </label>\n        <input\n          type="password"\n          value=',
@@ -291,9 +291,9 @@ module.exports = function () {
         },
         effects: {
             check: function () {
-                var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(state, _ref3, send, done) {
-                    var _ref3$onError = _ref3.onError, onError = _ref3$onError === undefined ? function () {
-                        } : _ref3$onError;
+                var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(state, _ref2, send, done) {
+                    var _ref2$onError = _ref2.onError, onError = _ref2$onError === undefined ? function () {
+                        } : _ref2$onError;
                     var userExists, fetchUser;
                     return regeneratorRuntime.wrap(function _callee$(_context) {
                         while (1) {
@@ -318,9 +318,10 @@ module.exports = function () {
                         }
                     }, _callee, undefined);
                 }));
-                return function check(_x, _x2, _x3, _x4) {
-                    return _ref2.apply(this, arguments);
-                };
+                function check(_x, _x2, _x3, _x4) {
+                    return _ref3.apply(this, arguments);
+                }
+                return check;
             }(),
             clearTokens: function clearTokens(state, payload, send) {
                 send('auth:receiveTokens', {
@@ -415,8 +416,8 @@ module.exports = function (_ref) {
         },
         effects: {
             updateForm: function () {
-                var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(state, _ref6, send, done) {
-                    var form = _ref6.form;
+                var _ref6 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(state, _ref5, send, done) {
+                    var form = _ref5.form;
                     return regeneratorRuntime.wrap(function _callee$(_context) {
                         while (1) {
                             switch (_context.prev = _context.next) {
@@ -434,13 +435,13 @@ module.exports = function (_ref) {
                     }, _callee, this);
                 }));
                 function updateForm(_x, _x2, _x3, _x4) {
-                    return _ref5.apply(this, arguments);
+                    return _ref6.apply(this, arguments);
                 }
                 return updateForm;
             }(),
             submit: function () {
-                var _ref7 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(state, _ref8, send, done) {
-                    var form = _ref8.form, cb = _ref8.cb;
+                var _ref8 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(state, _ref7, send, done) {
+                    var form = _ref7.form, cb = _ref7.cb;
                     var response;
                     return regeneratorRuntime.wrap(function _callee2$(_context2) {
                         while (1) {
@@ -490,7 +491,7 @@ module.exports = function (_ref) {
                     }, _callee2, this);
                 }));
                 function submit(_x5, _x6, _x7, _x8) {
-                    return _ref7.apply(this, arguments);
+                    return _ref8.apply(this, arguments);
                 }
                 return submit;
             }()
@@ -672,9 +673,10 @@ module.exports = function (_ref) {
                         }
                     }, _callee, undefined);
                 }));
-                return function fetch(_x, _x2, _x3, _x4) {
+                function fetch(_x, _x2, _x3, _x4) {
                     return _ref3.apply(this, arguments);
-                };
+                }
+                return fetch;
             }()
         }
     };
@@ -14928,7 +14930,8 @@ var css = 0;
 var noop = function noop() {
 };
 var LoginForm = require('../components/LoginForm');
-var styles = (null || true) && '_953343d8';
+var styles = (null || true) && '_2a3bebb9';
+var formStyles = (null || true) && '_2d076230';
 module.exports = function () {
     var child = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop;
     return function (state, prev, send) {
@@ -14945,6 +14948,7 @@ module.exports = function () {
             return send('login:updateForm', { form: form });
         };
         return html(_templateObject, styles, LoginForm({
+            styles: formStyles,
             onSubmit: onSubmit,
             onChange: onChange,
             values: state.login.form,

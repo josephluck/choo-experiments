@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && npm run minify && node server.js",
-    "dev": "budo index.js --live --pushstate --host=localhost --port=8888 --base=/ --onupdate \"standard | notify-error\" -- -t babelify -t sheetify/transform",
-    "build": "browserify index.js -t [ sheetify/transform ] -p [ css-extract -o ./build/assets/bundle.css ] -t [ babelify --presets [ es2015 stage-0 ] ] -t [ envify ] -t [ yo-yoify ] -t [ unassertify ] -o ./build/assets/bundle.js",
+    "dev": "budo index.js --live --pushstate --host=localhost --port=8888 --base=/ --onupdate \"standard | notify-error\" -- -t sheetify/transform -t babelify",
+    "build": "browserify index.js -t [ sheetify/transform ] -p [ css-extract -o ./build/assets/bundle.css ] -t [ babelify ] -t [ envify ] -t [ yo-yoify ] -t [ unassertify ] -o ./build/assets/bundle.js",
     "minify": "uglifyjs --compress --mangle --output=./build/assets/bundle.min.js -- ./build/assets/bundle.js",
     "lint": "standard",
     "unit": "tape -r babel-register **/*.unit.js | tap-spec",

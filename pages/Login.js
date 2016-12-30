@@ -5,16 +5,17 @@ const noop = () => {}
 const LoginForm = require('../components/LoginForm')
 
 const styles = css`
-  :host > .form {
+  :host > form {
     text-align: center;
   }
   :host input {
     padding: 5px 10px;
+    background: blue;
   }
 `
 
 const formStyles = css`
-  input {
+  :host input {
     background: orange;
   }
 `
