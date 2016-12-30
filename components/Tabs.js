@@ -23,5 +23,5 @@ module.exports = ValidateProps(({
 }, {
   activeRoute: ValidateProps.PropTypes.string,
   activeClass: ValidateProps.PropTypes.string,
-  tabs: ValidateProps.PropTypes.array
+  tabs: ValidateProps.PropTypes.string
 })

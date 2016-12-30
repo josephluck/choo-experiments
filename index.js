@@ -2,7 +2,6 @@ require('babel-polyfill')
 
 const choo = require('choo')
 const promisify = require('./utils/promisify')
-const log = require('choo-log')
 const state = require('./utils/state')
 const store = require('./utils/store')
 
@@ -12,7 +11,13 @@ const app = choo()
 
 app.use(state())
 app.use(promisify())
-app.use(log()) // <-- turn off if production
+
+if (process.env.NODE_ENV !== 'production') {
+  const log = require('choo-log')
+  app.use(log())
+}
+
+console.log('Hello')
 
 models.forEach((model) => app.model(model))
 store.init(app._store._models)

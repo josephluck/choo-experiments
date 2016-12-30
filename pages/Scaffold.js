@@ -1,5 +1,4 @@
 const html = require('choo/html')
-
 const MainNav = require('../components/MainNav')
 
 module.exports = (child = () => {}) => (state, prev, send) => {
