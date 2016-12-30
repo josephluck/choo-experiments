@@ -12,7 +12,8 @@ module.exports = (child = () => {}) => (state, prev, send) => {
     <div>
       ${MainNav({
         user: state.user.user,
-        onLogout
+        onLogout,
+        currentRoute: state.location.pathname
       })}
       ${child(state, prev, send)}
     </div>

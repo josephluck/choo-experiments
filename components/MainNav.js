@@ -1,9 +1,12 @@
 const html = require('choo/html')
 const noop = () => {}
 
+const Tabs = require('./tabs')
+
 module.exports = ({
   user = {},
-  onLogout = noop
+  onLogout = noop,
+  currentRoute = ''
 }) => {
   const onLogoutClick = (e) => {
     e.preventDefault()
@@ -13,8 +16,22 @@ module.exports = ({
   return html`
     <div>
       Hello ${user.name}
-      <a href="dashboard">Dashboard</a>
-      <a href="todos">Todos</a>
+
+      ${Tabs({
+        activeRoute: currentRoute,
+        tabs: [
+          {
+            label: 'Dashboard',
+            href: '/dashboard'
+          },
+          {
+            label: 'Todos',
+            href: '/todos'
+          }
+        ]
+      })}
+
+      <br />
       <a onclick=${onLogoutClick}>Logout</a>
     </div>
   `
