@@ -21,6 +21,7 @@
     "babel-polyfill": "^6.20.0",
     "choo": "^4.0.3",
     "jwt-decode": "^2.1.0",
+    "proptypes": "^0.14.3",
     "rest": "^2.0.0",
     "sheetify": "^6.0.1",
     "validate.js": "^0.11.1"

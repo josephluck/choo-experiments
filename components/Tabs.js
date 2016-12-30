@@ -1,6 +1,7 @@
 const html = require('choo/html')
+const ValidateProps = require('./hoc/ValidateProps')
 
-module.exports = ({
+module.exports = ValidateProps(({
   activeRoute = '',
   activeClass = 'b',
   tabs = []
@@ -19,4 +20,8 @@ module.exports = ({
       </div>
     `
   })
-}
+}, {
+  activeRoute: ValidateProps.PropTypes.string,
+  activeClass: ValidateProps.PropTypes.string,
+  tabs: ValidateProps.PropTypes.array
+})

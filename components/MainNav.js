@@ -19,6 +19,7 @@ module.exports = ({
 
       ${Tabs({
         activeRoute: currentRoute,
+        activeClass: 'i',
         tabs: [
           {
             label: 'Dashboard',
