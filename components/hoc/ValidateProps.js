@@ -17,10 +17,8 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = (comp, types) => {
   return (props) => {
     if (process.env.NODE_ENV !== 'production') {
-      console.log('We care about props in development')
       return validate(props, types) ? comp(props) : null
     }
-    console.log('We dont care about props in production')
     return comp(props)
   }
 }

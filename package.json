@@ -6,11 +6,11 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production npm run build && npm run minify && node server.js",
     "dev": "cross-env NODE_ENV=development budo index.js --live --pushstate --host=localhost --port=8888 --base=/ --onupdate \"standard | notify-error\" -- -t sheetify/transform -t babelify",
-    "build": "cross-env NODE_ENV=production browserify index.js -t [ sheetify/transform ] -p [ css-extract -o ./build/assets/bundle.css ] -t [ babelify ] -t [ envify ] -t [ yo-yoify ] -t [ unassertify ] -o ./build/assets/bundle.js",
+    "build": "cross-env NODE_ENV=production browserify index.js -t [ sheetify/transform ] -p [ css-extract -o ./build/assets/bundle.css ] -t [ babelify ] -t [ envify ] -t [ yo-yoify ] -t [ unassertify ] --full-paths -o ./build/assets/bundle.js",
     "minify": "cross-env NODE_ENV=production uglifyjs --compress --mangle --output=./build/assets/bundle.min.js -- ./build/assets/bundle.js",
     "lint": "standard",
-    "unit": "cross-env NODE_ENV=test tape -r babel-register **/*.unit.js | tap-spec",
-    "unit/watch": "cross-env NODE_ENV=test tape-watch -r babel-register **/*.unit.js | tap-spec",
+    "unit": "cross-env NODE_ENV=test tape -r babel-register -r babel-polyfill **/*.unit.js | tap-spec",
+    "unit/watch": "cross-env NODE_ENV=test tape-watch -r babel-register -r babel-polyfill **/*.unit.js | tap-spec",
     "coverage": "cross-env NODE_ENV=test nyc npm test",
     "test": "npm run unit"
   },

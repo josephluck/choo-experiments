@@ -17,8 +17,6 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(log())
 }
 
-console.log('Hello')
-
 models.forEach((model) => app.model(model))
 store.init(app._store._models)
 app.router(pages())
