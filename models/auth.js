@@ -36,7 +36,7 @@ module.exports = () => {
     },
 
     effects: {
-      check: async (state, { onError = () => {} }, send, done) => {
+      check: (state, { onError = () => {} }, send, done) => {
         if (state.accessToken) {
           const userExists = !!state.$root.user.user.id
           const fetchUser = !userExists
@@ -45,9 +45,7 @@ module.exports = () => {
             })
             : Promise.resolve()
 
-          await Promise.all([ fetchUser ])
-
-          return
+          return Promise.all([ fetchUser ])
         }
         onError('No access token in state')
       }
