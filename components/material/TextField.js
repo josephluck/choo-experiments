@@ -1,16 +1,31 @@
 const html = require('choo/html')
 const noop = () => {}
 
+const Validation = ({
+  messages = []
+}) => {
+  if (messages) {
+    return messages.map((message) => {
+      return html`
+        <p class="mdc-textfield-helptext mdc-textfield-helptext--persistent mdc-textfield-helptext--validation-msg">
+          ${message}
+        </p>
+      `
+    })
+  }
+  return null
+}
+
 const showLabel = (elm) => () => {
   const label = elm.querySelector('label')
-  elm.classList.add('mdc-textfield--focussed')
+  elm.classList.add('mdc-textfield--focused')
   label.classList.add('mdc-textfield__label--float-above')
 }
 
 const hideLabel = (elm) => () => {
   const label = elm.querySelector('label')
   const input = elm.querySelector('input')
-  elm.classList.remove('mdc-textfield--focussed')
+  elm.classList.remove('mdc-textfield--focused')
   if (!input.value.length) {
     label.classList.remove('mdc-textfield__label--float-above')
   }
@@ -28,26 +43,38 @@ module.exports = ({
   label = '',
   required = false,
   disabled = false,
-  dense = false
+  dense = false,
+  validation = [],
+  className = ''
 }) => {
-  const labelClass = `mdc-textfield__label ${value.length ? 'mdc-textfield__label--float-above' : null}`
-
-  return html`
-    <div
-      class="mdc-textfield"
-      onload=${bindEvents}
-    >
-      <input
-        class="mdc-textfield__input"
-        type=${type}
-        value=${value}
-        onchange=${onChange}
-      />
-      <label
-        class=${labelClass}
-      >
-        ${label}
-      </label>
-    </div>
+  const labelClass = `
+    mdc-textfield__label
+    ${value.length ? 'mdc-textfield__label--float-above' : ''}
   `
+
+  return [
+    html`
+      <div
+        class=${`mdc-textfield ${className}`}
+        onload=${bindEvents}
+      >
+        <input
+          class="mdc-textfield__input"
+          type=${type}
+          value=${value}
+          onchange=${onChange}
+        />
+        <label
+          class=${labelClass}
+        >
+          ${label}
+        </label>
+      </div>
+    `,
+    html`
+      ${Validation({
+        messages: validation
+      })}
+    `
+  ]
 }

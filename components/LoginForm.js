@@ -36,31 +36,23 @@ module.exports = ({
       ${TextField({
         value: values.username,
         onChange: onUsernameChange,
-        label: 'Username'
+        label: 'Username',
+        validation: submitted ? validation.username : null
       })}
-      ${submitted && validation.username
-        ? html`
-          <small>
-            Username is required
-          </small>
-        `
-        : null
-      }
+
+      <br />
+      <br />
 
       ${TextField({
         value: values.password,
         onChange: onPasswordChange,
         label: 'Password',
-        type: 'password'
+        type: 'password',
+        validation: submitted ? validation.password : null
       })}
-      ${submitted && validation.password
-        ? html`
-          <small>
-            Password is required
-          </small>
-        `
-        : null
-      }
+
+      <br />
+      <br />
 
       <button
         type="submit"

@@ -23,6 +23,15 @@ module.exports = () => {
           refreshToken,
           expiresIn
         }
+      }),
+
+      clearTokens: sync('tokens', (state) => {
+        return {
+          ...state,
+          accessToken: null,
+          refreshToken: null,
+          expiresIn: null
+        }
       })
     },
 
@@ -41,14 +50,6 @@ module.exports = () => {
           return
         }
         onError('No access token in state')
-      },
-
-      clearTokens (state, payload, send) {
-        send('auth:receiveTokens', {
-          accessToken: null,
-          refreshToken: null,
-          expiresIn: null
-        })
       }
     }
   }
