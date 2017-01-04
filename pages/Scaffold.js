@@ -20,7 +20,14 @@ module.exports = (child = () => {}) => (state, prev, send) => {
   }
 
   return html`
-    <div class=${prefix}>
+    <div
+      class=${`
+        ${prefix}
+        mdl-layout
+        mdl-layout--fixed-header
+        is-upgraded
+      `}
+    >
       ${MainNav({
         user: state.user.user,
         onLogout,

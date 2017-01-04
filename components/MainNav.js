@@ -1,7 +1,7 @@
 const html = require('choo/html')
 const noop = () => {}
 
-const Tabs = require('./tabs')
+const Tabs = require('./Tabs')
 
 module.exports = ({
   user = {},
@@ -14,12 +14,30 @@ module.exports = ({
   }
 
   return html`
-    <div>
-      Hello ${user.name}
+    <div
+      class="mdl-layout__header"
+    >
+      <div
+        class="mdl-layout__header-row"
+      >
+        <span
+          class="mdl-layout-title"
+        >
+          Hello ${user.name}
+        </span>
+
+        <div class="mdl-layout-spacer"></div>
+
+        <a
+          onclick=${onLogoutClick}
+          class="white"
+        >
+          Logout
+        </a>
+      </div>
 
       ${Tabs({
         activeRoute: currentRoute,
-        activeClass: 'i',
         tabs: [
           {
             label: 'Dashboard',
@@ -27,14 +45,6 @@ module.exports = ({
           }
         ]
       })}
-
-      <br />
-
-      <a
-        onclick=${onLogoutClick}
-      >
-        Logout
-      </a>
     </div>
   `
 }
