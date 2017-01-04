@@ -47,6 +47,11 @@ module.exports = ({
   validation = [],
   className = ''
 }) => {
+  const textfieldClass = `
+    mdc-textfield
+    ${validation && validation.length ? 'mdc-textfield--invalid' : ''}
+    ${className}
+  `
   const labelClass = `
     mdc-textfield__label
     ${value.length ? 'mdc-textfield__label--float-above' : ''}
@@ -55,7 +60,7 @@ module.exports = ({
   return [
     html`
       <div
-        class=${`mdc-textfield ${className}`}
+        class=${textfieldClass}
         onload=${bindEvents}
       >
         <input
