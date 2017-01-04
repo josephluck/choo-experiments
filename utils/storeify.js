@@ -1,8 +1,19 @@
-const store = require('./store')
+let store = require('./store')
 
 module.exports = () => ({
+  init (models) {
+    const state = models.reduce((prev, curr) => {
+      if (curr.namespace) {
+        return { ...prev, [curr.namespace]: curr.state }
+      }
+      return { ...prev, ...curr.state }
+    }, {})
+
+    store.update(state)
+  },
+
   onStateChange: function (state) {
-    store.state = state
+    store.update(state)
   },
 
   wrapEffects: function (fn) {

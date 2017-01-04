@@ -1,29 +1,32 @@
 require('babel-polyfill')
 
+const css = require('sheetify')
 const choo = require('choo')
-const promisify = require('./utils/promisify')
-const state = require('./utils/state')
-const store = require('./utils/store')
-
-const pages = require('./pages')
-const models = require('./models')
 const app = choo()
 
-app.use(state())
+// Plugins
+const promisify = require('./utils/promisify')
+const storeify = require('./utils/storeify')()
 app.use(promisify())
-
+app.use(storeify)
 if (process.env.NODE_ENV !== 'production') {
   const log = require('choo-log')
   app.use(log())
 }
 
+// Models
+const models = require('./models')
 models.forEach((model) => app.model(model))
-store.init(app._store._models)
+storeify.init(app._store._models)
+
+// Pages
+const pages = require('./pages')
 app.router(pages())
 
+// Bootstrap
 document.body.appendChild(app.start())
 
-const css = require('sheetify')
+// Css
 css('tachyons/css/tachyons.css')
 css('material-components-web/dist/material-components-web.min.css')
 

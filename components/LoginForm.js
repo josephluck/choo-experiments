@@ -1,30 +1,7 @@
 const html = require('choo/html')
 const noop = () => {}
 const emptyLogin = require('../factories/login').empty
-
-const MInput = ({
-  value = '',
-  type = 'text',
-  onChange = noop,
-  label = '',
-  required = false,
-  disabled = false,
-  dense = false
-}) => {
-  return html`
-    <div class="mdc-textfield">
-      <input
-        class="mdc-textfield__input"
-        type=${type}
-        value=${value}
-        onchange=${onChange}
-      />
-      <label class="mdc-textfield__label ${value.length ? 'mdc-textfield__label--float-above' : null}">
-        ${label}
-      </label>
-    </div>
-  `
-}
+const TextField = require('./material/TextField')
 
 module.exports = ({
   onSubmit = noop,
@@ -56,7 +33,7 @@ module.exports = ({
       onsubmit=${submit}
       class=${styles}
     >
-      ${MInput({
+      ${TextField({
         value: values.username,
         onChange: onUsernameChange,
         label: 'Username'
@@ -70,27 +47,20 @@ module.exports = ({
         : null
       }
 
-      <div class="mdc-form-field mb4">
-        <div class="mdc-textfield">
-          <input
-            class="mdc-textfield__input"
-            type="password"
-            value=${values.password}
-            onkeyup=${onPasswordChange}
-          />
-          <label class="mdc-textfield__label ${values.password.length ? 'mdc-textfield__label--float-above' : null}">
-            Password
-          </label>
-        </div>
-        ${submitted && validation.password
-          ? html`
-            <small>
-              Password is required
-            </small>
-          `
-          : null
-        }
-      </div>
+      ${TextField({
+        value: values.password,
+        onChange: onPasswordChange,
+        label: 'Password',
+        type: 'password'
+      })}
+      ${submitted && validation.password
+        ? html`
+          <small>
+            Password is required
+          </small>
+        `
+        : null
+      }
 
       <button
         type="submit"
