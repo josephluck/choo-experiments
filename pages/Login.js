@@ -4,8 +4,11 @@ const noop = () => {}
 const LoginForm = require('../components/LoginForm')
 
 module.exports = (child = noop) => (state, prev, send) => {
-  const cb = () => send('location:set', 'dashboard')
-  const onSubmit = (form) => send('login:submit', { form, cb })
+  const onSubmit = () => send('login:submit', {
+    cb () {
+      send('location:set', 'dashboard')
+    }
+  })
   const onChange = (form) => send('login:updateForm', { form })
 
   return html`

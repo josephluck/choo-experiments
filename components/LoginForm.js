@@ -19,13 +19,15 @@ module.exports = ({
       username: e.target.value
     })
   }
+
   const onPasswordChange = (e) => onChange({
     ...values,
     password: e.target.value
   })
+
   const submit = (e) => {
     e.preventDefault()
-    onSubmit(values)
+    onSubmit()
   }
 
   return html`
@@ -33,26 +35,26 @@ module.exports = ({
       onsubmit=${submit}
       class=${styles}
     >
-      ${TextField({
-        value: values.username,
-        onChange: onUsernameChange,
-        label: 'Username',
-        validation: submitted ? validation.username : null
-      })}
+      <div>
+        ${TextField({
+          value: values.username,
+          onChange: onUsernameChange,
+          label: 'Username',
+          validation: submitted ? validation.username : null
+        })}
+      </div>
 
       <br />
-      <br />
 
-      ${TextField({
-        value: values.password,
-        onChange: onPasswordChange,
-        label: 'Password',
-        type: 'password',
-        validation: submitted ? validation.password : null
-      })}
-
-      <br />
-      <br />
+      <div>
+        ${TextField({
+          value: values.password,
+          onChange: onPasswordChange,
+          label: 'Password',
+          type: 'password',
+          validation: submitted ? validation.password : null
+        })}
+      </div>
 
       <button
         type="submit"

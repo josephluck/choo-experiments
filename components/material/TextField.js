@@ -1,34 +1,21 @@
 const html = require('choo/html')
 const noop = () => {}
-
-const Validation = ({
-  messages = []
-}) => {
-  if (messages) {
-    return messages.map((message) => {
-      return html`
-        <p class="mdc-textfield-helptext mdc-textfield-helptext--persistent mdc-textfield-helptext--validation-msg">
-          ${message}
-        </p>
-      `
-    })
-  }
-  return null
-}
+const Validation = require('./Validation')
 
 const showLabel = (elm) => () => {
-  const label = elm.querySelector('label')
-  elm.classList.add('mdc-textfield--focused')
-  label.classList.add('mdc-textfield__label--float-above')
+  window.requestAnimationFrame(() => {
+    elm.classList.add('is-focused')
+  })
 }
 
 const hideLabel = (elm) => () => {
-  const label = elm.querySelector('label')
   const input = elm.querySelector('input')
-  elm.classList.remove('mdc-textfield--focused')
-  if (!input.value.length) {
-    label.classList.remove('mdc-textfield__label--float-above')
-  }
+  window.requestAnimationFrame(() => {
+    elm.classList.remove('is-focused')
+    if (!input.value.length) {
+      elm.classList.remove('is-dirty')
+    }
+  })
 }
 
 const bindEvents = (elm) => {
@@ -47,39 +34,38 @@ module.exports = ({
   validation = [],
   className = ''
 }) => {
-  const textfieldClass = `
-    mdc-textfield
-    ${validation && validation.length ? 'mdc-textfield--invalid' : ''}
-    ${className}
-  `
-  const labelClass = `
-    mdc-textfield__label
-    ${value.length ? 'mdc-textfield__label--float-above' : ''}
-  `
-
-  return [
-    html`
-      <div
-        class=${textfieldClass}
-        onload=${bindEvents}
+  const inputElm = html`
+    <div
+      class=${`
+        mdl-textfield mdl-textfield--floating-label
+        ${value.length ? 'is-dirty' : ''}
+        ${validation && validation.length ? 'mdl-textfield--invalid' : ''}
+        ${className}
+      `}
+      onload=${bindEvents}
+    >
+      <input
+        class="mdl-textfield__input"
+        type=${type}
+        value=${value}
+        oninput=${onChange}
+      />
+      <label
+        class=${`
+          mdl-textfield__label
+        `}
       >
-        <input
-          class="mdc-textfield__input"
-          type=${type}
-          value=${value}
-          onchange=${onChange}
-        />
-        <label
-          class=${labelClass}
-        >
-          ${label}
-        </label>
-      </div>
-    `,
-    html`
-      ${Validation({
-        messages: validation
-      })}
-    `
+        ${label}
+      </label>
+    </div>
+  `
+  const validationElm = html`
+    ${Validation({
+      messages: validation
+    })}
+  `
+  return [
+    inputElm,
+    validationElm
   ]
 }

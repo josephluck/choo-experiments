@@ -1,4 +1,3 @@
-const _ = require('lodash')
 const validate = require('validate.js')
 const formRules = require('../factories/login').rules
 
@@ -17,61 +16,52 @@ module.exports = ({
   },
 
   reducers: {
-    replaceForm: (state, { form }) => {
-      return { ...state, form: { ...state.form, ...form } }
+    replaceForm (state, { form }) {
+      const newForm = { ...state.form, ...form }
+      return { form: newForm }
     },
 
-    validateForm: (state) => {
-      const validation = validate(state.form, formRules()) || {}
-      return {
-        ...state,
-        validation,
-        valid: !Object.keys(validation).length
-      }
+    validateForm (state, { form }) {
+      const validation = validate(form, formRules()) || {}
+      const valid = !Object.keys(validation).length
+      return { validation, valid }
     },
 
-    setSubmitting: (state, { submitting }) => {
-      return {
-        ...state,
-        submitting
-      }
+    setSubmitting (state, { submitting }) {
+      return { submitting }
     },
 
-    setSubmitted: (state, { submitted }) => {
-      return {
-        ...state,
-        submitted
-      }
+    setSubmitted (state, { submitted }) {
+      return { submitted }
     }
   },
 
   effects: {
-    updateForm: _.debounce((state, { form }, send, done) => {
+    updateForm (state, { form }, send, done) {
       send('login:replaceForm', { form })
-      send('login:validateForm')
-    }, 50),
+      send('login:validateForm', { form })
+    },
 
-    submit: async function (state, { form, cb }, send, done) {
-      await send('login:setSubmitted', { submitted: true })
-      await send('login:validateForm')
+    submit (state, { cb }, send, done) {
+      send('login:setSubmitted', { submitted: true })
+      if (!state.valid) {
+        return false
+      }
+      send('login:setSubmitting', { submitting: true })
 
-      if (!state.valid) { return false }
+      return passport.login({ payload: state.form }).then((response) => {
+        send('login:setSubmitting', { submitting: false })
+        if (response.code === 403) {
+          return false
+        }
+        send('auth:receiveTokens', {
+          accessToken: response.access_token,
+          refreshToken: response.refresh_token,
+          expiresIn: response.expires_in
+        })
 
-      await send('login:setSubmitting', { submitting: true })
-
-      const response = await passport.login({ payload: form })
-
-      await send('login:setSubmitting', { submitting: false })
-
-      if (response.code === 403) { return false }
-
-      await send('auth:receiveTokens', {
-        accessToken: response.access_token,
-        refreshToken: response.refresh_token,
-        expiresIn: response.expires_in
+        return cb()
       })
-
-      return cb()
     }
   }
 })

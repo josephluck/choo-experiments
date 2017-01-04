@@ -28,6 +28,6 @@ document.body.appendChild(app.start())
 
 // Css
 css('tachyons/css/tachyons.css')
-css('material-components-web/dist/material-components-web.min.css')
+css('material-design-lite/material.min.css')
 
 module.exports = app
