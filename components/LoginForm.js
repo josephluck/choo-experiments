@@ -2,11 +2,14 @@ const html = require('choo/html')
 const noop = () => {}
 const emptyLogin = require('../factories/login').empty
 
-const MdlTextfield = ({
+const MInput = ({
   value = '',
   type = 'text',
   onChange = noop,
-  label = ''
+  label = '',
+  required = false,
+  disabled = false,
+  dense = false
 }) => {
   return html`
     <div class="mdc-textfield">
@@ -14,7 +17,7 @@ const MdlTextfield = ({
         class="mdc-textfield__input"
         type=${type}
         value=${value}
-        onkeyup=${onChange}
+        onchange=${onChange}
       />
       <label class="mdc-textfield__label ${value.length ? 'mdc-textfield__label--float-above' : null}">
         ${label}
@@ -53,7 +56,7 @@ module.exports = ({
       onsubmit=${submit}
       class=${styles}
     >
-      ${MdlTextfield({
+      ${MInput({
         value: values.username,
         onChange: onUsernameChange,
         label: 'Username'
