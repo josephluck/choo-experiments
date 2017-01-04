@@ -28,6 +28,7 @@ document.body.appendChild(app.start())
 
 // Css
 css('tachyons/css/tachyons.css')
+css('tachyons-flexbox/css/tachyons-flexbox.css')
 css('material-design-lite/material.min.css')
 
 module.exports = app

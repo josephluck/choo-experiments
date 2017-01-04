@@ -1,5 +1,17 @@
 const html = require('choo/html')
+const css = require('sheetify')
 const MainNav = require('../components/MainNav')
+
+const prefix = css`
+  :host {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: auto;
+  }
+`
 
 module.exports = (child = () => {}) => (state, prev, send) => {
   const onLogout = () => {
@@ -8,7 +20,7 @@ module.exports = (child = () => {}) => (state, prev, send) => {
   }
 
   return html`
-    <div>
+    <div class=${prefix}>
       ${MainNav({
         user: state.user.user,
         onLogout,

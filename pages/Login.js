@@ -12,7 +12,7 @@ module.exports = (child = noop) => (state, prev, send) => {
   const onChange = (form) => send('login:updateForm', { form })
 
   return html`
-    <div class="ma5">
+    <div class="flex flex-auto">
       ${LoginForm({
         onSubmit,
         onChange,

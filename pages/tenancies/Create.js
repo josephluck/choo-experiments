@@ -3,7 +3,7 @@ const html = require('choo/html')
 module.exports = (child = () => {}) => (state, prev, send) => {
   return html`
     <div>
-      <a href="/tenancies/create">Create Tenancy</a>
+      Tenancy form goes here
       ${child(state, prev, send)}
     </div>
   `

@@ -24,10 +24,6 @@ module.exports = ({
           {
             label: 'Dashboard',
             href: '/dashboard'
-          },
-          {
-            label: 'Todos',
-            href: '/todos'
           }
         ]
       })}

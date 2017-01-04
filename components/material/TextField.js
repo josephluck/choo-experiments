@@ -2,16 +2,16 @@ const html = require('choo/html')
 const noop = () => {}
 const Validation = require('./Validation')
 
-const showLabel = (elm) => () => {
+const onInputFocus = (elm) => () => {
   window.requestAnimationFrame(() => {
     elm.classList.add('is-focused')
   })
 }
 
-const hideLabel = (elm) => () => {
-  const input = elm.querySelector('input')
+const onInputBlur = (elm) => () => {
   window.requestAnimationFrame(() => {
     elm.classList.remove('is-focused')
+    const input = elm.querySelector('input')
     if (!input.value.length) {
       elm.classList.remove('is-dirty')
     }
@@ -19,8 +19,8 @@ const hideLabel = (elm) => () => {
 }
 
 const bindEvents = (elm) => {
-  elm.addEventListener('focus', showLabel(elm), true)
-  elm.addEventListener('blur', hideLabel(elm), true)
+  elm.addEventListener('focus', onInputFocus(elm), true)
+  elm.addEventListener('blur', onInputBlur(elm), true)
 }
 
 module.exports = ({
@@ -34,12 +34,12 @@ module.exports = ({
   validation = [],
   className = ''
 }) => {
-  const inputElm = html`
+  return html`
     <div
       class=${`
         mdl-textfield mdl-textfield--floating-label
         ${value.length ? 'is-dirty' : ''}
-        ${validation && validation.length ? 'mdl-textfield--invalid' : ''}
+        ${validation && validation.length ? 'is-invalid' : ''}
         ${className}
       `}
       onload=${bindEvents}
@@ -57,15 +57,9 @@ module.exports = ({
       >
         ${label}
       </label>
+      ${Validation({
+        messages: validation
+      })}
     </div>
   `
-  const validationElm = html`
-    ${Validation({
-      messages: validation
-    })}
-  `
-  return [
-    inputElm,
-    validationElm
-  ]
 }

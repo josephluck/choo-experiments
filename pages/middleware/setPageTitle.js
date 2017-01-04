@@ -1,4 +1,4 @@
-module.exports = (title, child) => (state, prev, send) => {
+module.exports = (child, title) => (state, prev, send) => {
   const baseTitle = 'Goodlord - Property Done Right'
 
   if (title) {

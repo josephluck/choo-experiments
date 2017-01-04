@@ -25,6 +25,7 @@
     "proptypes": "^0.14.3",
     "rest": "^2.0.0",
     "sheetify": "^6.0.1",
+    "tachyons-flexbox": "^2.0.4",
     "validate.js": "^0.11.1"
   },
   "devDependencies": {
