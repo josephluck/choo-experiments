@@ -20,14 +20,13 @@ const createLogin = () => {
 }
 
 test('MODELS / login / update form', function (t) {
-  t.plan(3)
+  t.plan(2)
 
   const state = {
     form: {
       username: '',
       password: ''
-    },
-    shouldBeLeftUnchanged: true
+    }
   }
 
   const form = {
@@ -39,22 +38,25 @@ test('MODELS / login / update form', function (t) {
 
   t.equal(newState.form.username, 'username', 'Should update username')
   t.equal(newState.form.password, 'gazza', 'Should update password')
-  t.equal(newState.shouldBeLeftUnchanged, true, 'Should retain other state')
   t.end()
 })
 
 test('MODELS / login / validate form', function (t) {
   t.plan(2)
 
-  const state = {
-    form: {
+  const form = () => {
+    return {
       username: 'hey',
       password: ''
-    },
+    }
+  }
+
+  const state = {
+    form: form(),
     validation: {}
   }
 
-  const newState = createLogin().reducers.validateForm(state)
+  const newState = createLogin().reducers.validateForm(state, { form: form() })
 
   t.true(newState.validation.password, 'Should validate password')
   t.false(newState.validation.username, 'Should validate username')
