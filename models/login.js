@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const validate = require('validate.js')
 const formRules = require('../factories/login').rules
 
@@ -16,11 +17,11 @@ module.exports = ({
   },
 
   reducers: {
-    replaceForm: function (state, { form }) {
+    replaceForm: (state, { form }) => {
       return { ...state, form: { ...state.form, ...form } }
     },
 
-    validateForm: function (state) {
+    validateForm: (state) => {
       const validation = validate(state.form, formRules()) || {}
       return {
         ...state,
@@ -29,14 +30,14 @@ module.exports = ({
       }
     },
 
-    setSubmitting: function (state, { submitting }) {
+    setSubmitting: (state, { submitting }) => {
       return {
         ...state,
         submitting
       }
     },
 
-    setSubmitted: function (state, { submitted }) {
+    setSubmitted: (state, { submitted }) => {
       return {
         ...state,
         submitted
@@ -45,10 +46,10 @@ module.exports = ({
   },
 
   effects: {
-    updateForm: async function (state, { form }, send, done) {
-      await send('login:replaceForm', { form })
-      await send('login:validateForm')
-    },
+    updateForm: _.debounce((state, { form }, send, done) => {
+      send('login:replaceForm', { form })
+      send('login:validateForm')
+    }, 50),
 
     submit: async function (state, { form, cb }, send, done) {
       await send('login:setSubmitted', { submitted: true })

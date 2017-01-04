@@ -1,24 +1,7 @@
 const html = require('choo/html')
-const css = require('sheetify')
 const noop = () => {}
 
 const LoginForm = require('../components/LoginForm')
-
-const styles = css`
-  :host > form {
-    text-align: center;
-  }
-  :host input {
-    padding: 5px 10px;
-    background: blue;
-  }
-`
-
-const formStyles = css`
-  :host input {
-    background: orange;
-  }
-`
 
 module.exports = (child = noop) => (state, prev, send) => {
   const cb = () => send('location:set', 'dashboard')
@@ -26,9 +9,8 @@ module.exports = (child = noop) => (state, prev, send) => {
   const onChange = (form) => send('login:updateForm', { form })
 
   return html`
-    <div class=${styles}>
+    <div class="ma5">
       ${LoginForm({
-        styles: formStyles,
         onSubmit,
         onChange,
         values: state.login.form,

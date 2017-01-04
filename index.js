@@ -25,5 +25,6 @@ document.body.appendChild(app.start())
 
 const css = require('sheetify')
 css('tachyons/css/tachyons.css')
+css('material-components-web/dist/material-components-web.min.css')
 
 module.exports = app

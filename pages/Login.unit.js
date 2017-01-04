@@ -28,7 +28,10 @@ test('PAGES / login / render child', function (t) {
   const child = sinon.stub()
   const state = {
     login: {
-      form: {}
+      form: {
+        username: '',
+        password: ''
+      }
     }
   }
   const send = () => {}
