@@ -6,7 +6,7 @@ const Validation = require('./Validation')
 const prefix = css`
   :host {
     position: relative;
-    margin-top: 2rem;
+    padding-top: 2rem;
   }
 
   :host input {

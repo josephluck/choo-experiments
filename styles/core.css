@@ -1,6 +1,6 @@
 body, html {
   font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
-  font-size: 14px;
+  // text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+  // font-size: 14px;
 }

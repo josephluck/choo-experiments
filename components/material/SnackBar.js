@@ -7,9 +7,9 @@ const prefix = css`
     bottom: 0rem;
     left: 25%;
     width: 50vw;
-    padding: 1rem 2rem;
-    border-top-left-radius: 0.25rem;
-    border-top-right-radius: 0.25rem;
+    padding: 14px 24px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
     background: #333333;
     color: white;
     box-shadow: 0px 4px 2px -2px rgba(0, 0, 0, 0.2);
