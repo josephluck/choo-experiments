@@ -6,7 +6,7 @@ const Validation = require('./Validation')
 const prefix = css`
   :host {
     position: relative;
-    margin-top: 30px;
+    margin-top: 2rem;
   }
 
   :host input {
@@ -16,8 +16,9 @@ const prefix = css`
     border-right: 0;
     border-bottom: solid 1px #e0e0e0;
     transition: all 350ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-    padding: 3px 0px;
+    padding: 0rem 0px 0.5rem;
     box-shadow: 0px 1px 0px 0px transparent;
+    width: 100%;
   }
 
   :host label {
@@ -36,19 +37,29 @@ const prefix = css`
 
   :host input:focus {
     outline: none;
-    border-bottom-color: #39a9f4;
-    box-shadow: 0px 1px 0px 0px #39a9f4;
+    border-bottom-color: rgba(57, 169, 244, 1);
+    box-shadow: 0px 1px 0px 0px rgba(57, 169, 244, 0.45);
   }
   :host input:focus + label,
   :host input.--has-value + label {
-    transform: translateY(-100%) scale(0.7, 0.7);
-    color: #39a9f4;
+    color: rgba(57, 169, 244, 1);
+    font-size: 0.7em;
+    transform: translateY(-100%);
+  }
+
+  :host input.--is-invalid {
+    border-color: rgba(243, 67, 54, 1);
+  }
+  :host input.--is-invalid:focus {
+    box-shadow: 0px 1px 0px 0px rgba(243, 67, 54, 0.45);
+  }
+  :host input.--is-invalid:focus + label {
+    color: rgba(243, 67, 54, 1);
   }
 
   :host input:disabled {
     cursor: not-allowed;
     border-bottom-style: dotted;
-    border-bottom-width: 2px;
     border-bottom-color: #b3b3b3;
   }
 `
@@ -66,20 +77,26 @@ module.exports = ({
 
   return html`
     <div
-      class=${prefix}
+      class=${`
+        ${prefix}
+        ${className}
+      `}
     >
-      <input
-        type=${type}
-        value=${value}
-        oninput=${onInput}
-        disabled=${disabled}
-        class=${`
-          ${value.length ? '--has-value' : ''}
-        `}
-      />
-      <label>
-        ${label}
-      </label>
+      <div class="relative">
+        <input
+          type=${type}
+          value=${value}
+          oninput=${onInput}
+          disabled=${disabled}
+          class=${`
+            ${value.length ? '--has-value' : ''}
+            ${validation.length ? '--is-invalid' : ''}
+          `}
+        />
+        <label>
+          ${label}
+        </label>
+      </div>
       ${Validation({
         messages: validation
       })}

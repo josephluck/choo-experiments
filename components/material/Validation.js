@@ -1,4 +1,14 @@
 const html = require('choo/html')
+const css = require('sheetify')
+
+const prefix = css`
+  :host {
+    color: #f34336;
+    transform-origin: left;
+    font-size: 0.7rem;
+    padding: 0.25rem 0px;
+  }
+`
 
 module.exports = ({
   messages = []
@@ -6,9 +16,11 @@ module.exports = ({
   if (messages) {
     return messages.map((message) => {
       return html`
-        <p class="mdl-textfield__error">
+        <div
+          class=${prefix}
+        >
           ${message}
-        </p>
+        </div>
       `
     })
   }
