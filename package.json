@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production npm run build && npm run minify && node server.js",
-    "dev": "cross-env NODE_ENV=development budo app.js --live --pushstate --host=localhost --port=8888 --base=/ --onupdate \"standard | notify-error\" -- -t sheetify/transform -t babelify",
+    "dev": "cross-env NODE_ENV=development budo app.js --live --pushstate --host=localhost --port=8888 --serve bundle.js --base=/ --onupdate \"standard | notify-error\" -- -t sheetify/transform -t babelify",
     "build": "cross-env NODE_ENV=production browserify app.js -t [ sheetify/transform ] -p [ css-extract -o ./build/assets/bundle.css ] -t [ babelify ] -t [ envify ] -t [ yo-yoify ] -t [ unassertify ] --full-paths -o ./build/assets/bundle.js",
     "minify": "cross-env NODE_ENV=production uglifyjs --compress --mangle --output=./build/assets/bundle.min.js -- ./build/assets/bundle.js",
     "lint": "standard",
@@ -19,9 +19,10 @@
   "license": "ISC",
   "dependencies": {
     "babel-polyfill": "^6.20.0",
+    "cache-element": "^2.0.1",
     "choo": "^4.0.3",
     "jwt-decode": "^2.1.0",
-    "material-design-lite": "^1.3.0",
+    "nanomorph": "^1.1.1",
     "proptypes": "^0.14.3",
     "rest": "^2.0.0",
     "sheetify": "^6.0.1",
