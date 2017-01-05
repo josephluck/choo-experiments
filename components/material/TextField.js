@@ -15,7 +15,7 @@ const prefix = css`
     border-left: 0;
     border-right: 0;
     border-bottom: solid 1px #e0e0e0;
-    transition: all 350ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
     padding: 0rem 0px 0.5rem;
     box-shadow: 0px 1px 0px 0px transparent;
     width: 100%;
@@ -30,9 +30,8 @@ const prefix = css`
     display: flex;
     align-items: center;
     color: #a7a7a7;
-    font-weight: 300;
     transform-origin: left;
-    transition: all 350ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
   }
 
   :host input:focus {
@@ -40,9 +39,11 @@ const prefix = css`
     border-bottom-color: rgba(57, 169, 244, 1);
     box-shadow: 0px 1px 0px 0px rgba(57, 169, 244, 0.45);
   }
+  :host input:focus + label {
+    color: rgba(57, 169, 244, 1);
+  }
   :host input:focus + label,
   :host input.--has-value + label {
-    color: rgba(57, 169, 244, 1);
     font-size: 0.7em;
     transform: translateY(-100%);
   }

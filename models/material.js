@@ -36,7 +36,7 @@ module.exports = ({
 
       window.setTimeout(() => {
         send('material:snackHide', done)
-      }, 1000)
+      }, 3000)
     }
   }
 })

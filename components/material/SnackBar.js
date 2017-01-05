@@ -2,24 +2,20 @@ const html = require('choo/html')
 const css = require('sheetify')
 
 const prefix = css`
-  :host {
-    position: fixed;
-    bottom: 1rem;
-    width: 50vw;
-    left: 25%;
-  }
-
   :host .snack {
-    position: relative;
-    margin-top: 2rem;
+    position: fixed;
+    bottom: 0rem;
+    left: 25%;
+    width: 50vw;
     padding: 1rem 2rem;
-    border-radius: 0.25rem;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
     background: #333333;
     color: white;
     box-shadow: 0px 4px 2px -2px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    transition: all 350ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-    transform: translateY(10px);
+    opacity: 0.5;
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+    transform: translateY(100%);
   }
 
   :host .snack.--is-showing {
