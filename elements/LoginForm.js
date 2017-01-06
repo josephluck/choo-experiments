@@ -1,7 +1,7 @@
 const html = require('choo/html')
 const noop = () => {}
 const emptyLogin = require('../factories/login').empty
-const TextField = require('./material/TextField')
+const TextField = require('./TextField')
 
 module.exports = ({
   onSubmit = noop,

@@ -1,6 +1,6 @@
 const html = require('choo/html')
 const css = require('sheetify')
-const Ripple = require('./Ripple')
+const noop = () => {}
 
 const prefix = css`
   :host {
@@ -29,7 +29,7 @@ const Button = ({
   className = '',
   label = '',
   type = 'button',
-  ripple = true
+  onClick = noop
 }) => {
   return html`
     <button
@@ -38,10 +38,11 @@ const Button = ({
         ${className}
       `}
       type=${type}
+      onclick=${onClick}
     >
       ${label}
     </button>
   `
 }
 
-module.exports = Ripple(Button)
+module.exports = Button

@@ -1,7 +1,7 @@
 const html = require('choo/html')
 const noop = () => {}
 
-const LoginForm = require('../components/LoginForm')
+const LoginForm = require('../elements/LoginForm')
 
 module.exports = (child = noop) => (state, prev, send) => {
   const onSubmit = () => send('login:submit', {

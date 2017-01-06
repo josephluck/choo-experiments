@@ -16,6 +16,7 @@ const prefix = css`
     opacity: 0.5;
     transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
     transform: translateY(100%);
+    z-index: 100;
   }
 
   :host .snack.--is-showing {

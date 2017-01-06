@@ -31,10 +31,8 @@ const rippleEffectStyles = css`
   }
 `
 
-const rip = (elm) => (e) => {
-  const top = e.pageY - elm.offsetTop
-  const left = e.pageX - elm.offsetLeft
-  const ripple = html`
+const Ripple = (top, left) => {
+  return html`
     <svg
       height="20"
       width="20"
@@ -49,9 +47,17 @@ const rip = (elm) => (e) => {
       />
     </svg>
   `
+}
+
+const rip = (elm) => (e) => {
+  const top = e.pageY - elm.offsetTop
+  const left = e.pageX - elm.offsetLeft
+  const ripple = Ripple(top, left)
   elm.appendChild(ripple)
   window.setTimeout(() => {
-    elm.removeChild(ripple)
+    if (elm.contains(ripple)) {
+      elm.removeChild(ripple)
+    }
   }, 750)
 }
 

@@ -1,5 +1,5 @@
 const html = require('choo/html')
-const MainNav = require('../components/MainNav')
+const MainNav = require('../elements/MainNav')
 
 module.exports = (child = () => {}) => (state, prev, send) => {
   const onLogout = () => {

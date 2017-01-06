@@ -1,6 +1,7 @@
 const html = require('choo/html')
 
 const Button = require('./Button')
+const Ripple = require('../components/Ripple').component
 const SnackBar = require('./SnackBar')
 const TextField = require('./TextField')
 
@@ -13,12 +14,21 @@ const Buttons = (state, prev, send) => {
           label: 'No Ripple'
         })}
         <br />
-        <br />
-        ${Button({
-          label: 'With Ripple',
-          ripple: true
-        })}
       </div>
+    </div>
+  `
+}
+
+const Ripples = (state, prev, send) => {
+  const ripple = Ripple(state, prev, send)
+  return html`
+    <div class="mb5">
+      <h2>Ripple</h2>
+      ${ripple('abc', {
+        child: Button({
+          label: 'Button with Ripple'
+        })
+      })}
     </div>
   `
 }
@@ -38,15 +48,15 @@ const SnackBars = (state, prev, send) => {
       })}
       <br />
       <br />
-      <button
-        onclick=${() => {
+      ${Button({
+        label: 'Show Snack',
+        ripple: true,
+        onClick () {
           send('material:showSnack', {
             message: state.material.snackMessage
           })
-        }}
-      >
-        Give me a snack!
-      </button>
+        }
+      })}
       ${SnackBar({
         showing: state.material.snackShowing,
         message: state.material.snackMessage
@@ -130,6 +140,7 @@ module.exports = () => (state, prev, send) => {
       <br />
 
       ${Buttons(state, prev, send)}
+      ${Ripples(state, prev, send)}
       ${SnackBars(state, prev, send)}
       ${TextFields(state, prev, send)}
     </div>

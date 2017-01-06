@@ -6,11 +6,11 @@ const scaffold = require('./Scaffold')
 const login = require('./Login')
 const dashboard = require('./Dashboard')
 const createTenancy = require('./tenancies/Create')
-const material = require('../components/material')
+const components = require('../elements')
 
 module.exports = () => ([
   [ '/login', setPageTitle(redirectIfAuthenticated(login()), 'Login') ],
   [ '/dashboard', setPageTitle(requireAuth(scaffold(dashboard())), 'Dashboard') ],
   [ '/tenancies/create', setPageTitle(requireAuth(scaffold(createTenancy())), 'Create Tenancy') ],
-  [ '/material', setPageTitle(material(), 'Material Components') ]
+  [ '/components', setPageTitle(components(), 'Components') ]
 ])
