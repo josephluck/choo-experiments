@@ -21,80 +21,68 @@ const prefix = css`
     transform: scale(0);
     opacity: 1;
     pointer-events: none;
-    animation: ripple-animation .75s cubic-bezier(0.250, 0.460, 0.450, 0.940) forwards;
+    animation: ripple-animation 750ms cubic-bezier(0.250, 0.460, 0.450, 0.940) forwards;
   }
   :host .ripple > .ripple-inner {
     fill: rgba(0, 0, 0, 0.2);
   }
 `
 
-const emptyRippleState = () => ({
-  showing: false,
-  x: 0,
-  y: 0
-})
-
-const updateComponentWithId = (id, value) => {
+const updateRippleWithId = (id, value) => {
   return { [id]: value }
 }
 
 const element = ({
-  showing = false,
-  position = {},
+  ripples = [],
   child = '',
   onload = () => {},
   onunload = () => {},
   onmousedown = () => {}
 }) => {
-  const sendRipple = (e) => {
-    if (!showing) {
-      onmousedown(e, child)
-    }
-  }
-
   return html`
     <div
       class=${prefix}
       onunload=${onunload}
       onload=${onload}
-      onmousedown=${sendRipple}
+      onmousedown=${onmousedown}
     >
-      ${showing
-        ? html`
-            <svg
-              height="20"
-              width="20"
-              class="ripple"
-              style="top: ${position.y}px; left: ${position.x}px"
-            >
-              <circle
-                class="ripple-inner"
-                cx="10"
-                cy="10"
-                r="10"
-              />
-            </svg>
-          `
-        : ''
-      }
-
+      ${ripples.map((ripple) => {
+        return html`
+          <svg
+            height="20"
+            width="20"
+            class="ripple"
+            style="top: ${ripple.y}px; left: ${ripple.x}px"
+          >
+            <circle
+              class="ripple-inner"
+              cx="10"
+              cy="10"
+              r="10"
+            />
+          </svg>
+        `
+      })}
       ${child}
     </div>
   `
 }
 
+const emptyRippleState = () => {
+  return []
+}
+
 const component = (state, prev, send) => (id, props = {}, initialState = {}) => {
-  const currentRipple = state.ripple[id] ? state.ripple[id] : emptyRippleState()
+  const ripples = state.ripple[id] ? state.ripple[id] : emptyRippleState()
   const properties = Object.assign({}, props, {
-    showing: currentRipple.showing,
-    position: currentRipple.position,
+    ripples,
     onload () {
       send('ripple:init', { id, initialState })
     },
     onunload () {
       send('ripple:clear', id)
     },
-    onmousedown (e, child) {
+    onmousedown (e) {
       const position = {
         y: e.pageY - e.target.parentNode.offsetTop,
         x: e.pageX - e.target.parentNode.offsetLeft
@@ -107,33 +95,34 @@ const component = (state, prev, send) => (id, props = {}, initialState = {}) => 
 
 const model = () => ({
   namespace: 'ripple',
-  state: {
-    abc: {
-      showing: true
-    }
-  },
+  state: {},
   reducers: {
     init (state, { id, initialState }) {
-      const value = Object.assign({}, emptyRippleState(), initialState)
-      return updateComponentWithId(id, value)
+      const value = emptyRippleState()
+      return updateRippleWithId(id, value)
     },
     clear (state, id) {
-      return updateComponentWithId(id, emptyRippleState())
+      return updateRippleWithId(id, emptyRippleState())
     },
-    show (state, { id, position }) {
-      return updateComponentWithId(id, { showing: true, position })
+    show (state, { id, x, y, uuid }) {
+      const ripples = [ ...state[id], { x, y, uuid } ]
+      return updateRippleWithId(id, ripples)
     },
-    hide (state, id) {
-      return updateComponentWithId(id, emptyRippleState())
+    hide (state, { id, uuid }) {
+      const ripples = state[id].slice()
+      const indexToRemove = ripples.findIndex(ripple => ripple.uuid === uuid)
+      ripples.splice(indexToRemove, 1)
+      return updateRippleWithId(id, ripples)
     }
   },
   effects: {
-    trigger (state, payload, send, done) {
+    trigger (state, { id, position }, send, done) {
+      const uuid = Math.random()
+      const payload = Object.assign({}, position, { uuid, id })
       send('ripple:show', payload)
-
       window.setTimeout(() => {
-        send('ripple:hide', payload.id)
-      }, 1000)
+        send('ripple:hide', { id, uuid })
+      }, 750)
     }
   }
 })
