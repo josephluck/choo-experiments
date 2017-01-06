@@ -21,8 +21,6 @@ const prefix = css`
     transform: scale(0);
     opacity: 1;
     pointer-events: none;
-  }
-  :host .ripple.--showing {
     animation: ripple-animation .75s cubic-bezier(0.250, 0.460, 0.450, 0.940) forwards;
   }
   :host .ripple > .ripple-inner {
@@ -48,29 +46,37 @@ const element = ({
   onunload = () => {},
   onmousedown = () => {}
 }) => {
+  const sendRipple = (e) => {
+    if (!showing) {
+      onmousedown(e, child)
+    }
+  }
+
   return html`
     <div
       class=${prefix}
       onunload=${onunload}
       onload=${onload}
-      onmousedown=${(e) => onmousedown(e, child)}
+      onmousedown=${sendRipple}
     >
-      <svg
-        height="20"
-        width="20"
-        class=${`
-          ripple
-          ${showing ? '--showing' : ''}
-        `}
-        style="top: ${position.y}px; left: ${position.x}px"
-      >
-        <circle
-          class="ripple-inner"
-          cx="10"
-          cy="10"
-          r="10"
-        />
-      </svg>
+      ${showing
+        ? html`
+            <svg
+              height="20"
+              width="20"
+              class="ripple"
+              style="top: ${position.y}px; left: ${position.x}px"
+            >
+              <circle
+                class="ripple-inner"
+                cx="10"
+                cy="10"
+                r="10"
+              />
+            </svg>
+          `
+        : ''
+      }
 
       ${child}
     </div>
@@ -123,13 +129,11 @@ const model = () => ({
   },
   effects: {
     trigger (state, payload, send, done) {
-      if (!state[payload.id].showing) {
-        send('ripple:show', payload)
+      send('ripple:show', payload)
 
-        window.setTimeout(() => {
-          send('ripple:hide', payload.id)
-        }, 1000)
-      }
+      window.setTimeout(() => {
+        send('ripple:hide', payload.id)
+      }, 1000)
     }
   }
 })
