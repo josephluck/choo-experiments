@@ -20,22 +20,6 @@ const updateInstanceWithId = (instances, id, value) => {
   }
 }
 
-const getDefaultListeners = (namespace, send, id, initialState) => {
-  return {
-    setup () {
-      send(`${namespace}:setup`, {
-        id: id,
-        initialState: initialState
-      })
-    },
-    teardown () {
-      send(`${namespace}:clear`, {
-        id: id
-      })
-    }
-  }
-}
-
 const getDefaultReducers = () => {
   return {
     setup (state, payload) {
@@ -47,11 +31,10 @@ const getDefaultReducers = () => {
   }
 }
 
-module.exports = (definition) => {
-  assert.equal(typeof definition, 'function', 'Component must be a function')
-  const component = definition()
+module.exports = (component) => {
+  assert.equal(typeof component, 'object', 'Component must be an object')
   assert.equal(typeof component.view, 'function', 'Components view must be a function')
-  assert.equal(typeof component.model, 'object', 'Components model must be a object')
+  assert.equal(typeof component.model, 'object', 'Components model must be an object')
   assert.equal(typeof component.behaviour, 'function', 'Components behaviour must be a function')
   assert.equal(typeof component.model.namespace, 'string', 'Components model must have a namespace')
   const defaultReducers = getDefaultReducers()
@@ -74,24 +57,39 @@ module.exports = (definition) => {
     component (globalState, prev, send) {
       return function (instanceId, params) {
         assert.equal(typeof instanceId, 'string', 'Component instance must have an instanceId')
+
+        const behaviour = component.behaviour(send, instanceId)
+        const props = params ? params.props : {}
         const currentInstanceState = globalState[component.model.namespace].instances[instanceId]
           ? globalState[component.model.namespace].instances[instanceId]
-          : component.defaultInstanceState
-            ? component.defaultInstanceState()
+          : component.defaultState
+            ? component.defaultState
             : {}
-        const defaultListeners = getDefaultListeners(component.model.namespace, send, instanceId, params.initialState)
-        const behaviour = component.behaviour(send, instanceId)
-        const props = {
-          ...currentInstanceState,
-          ...params.props,
-          ...behaviour
-        }
+        const initialState = params && params.initialState
+          ? params.initialState
+          : component.defaultState
+            ? component.defaultState
+            : {}
+
         return html`
           <div
-            onload=${defaultListeners.setup}
-            onunload=${defaultListeners.teardown}
+            onload=${function () {
+              send(`${component.model.namespace}:setup`, {
+                id: instanceId,
+                initialState: initialState
+              })
+            }}
+            onunload=${function () {
+              send(`${component.model.namespace}:clear`, {
+                id: instanceId
+              })
+            }}
           >
-            ${component.view(props)}
+            ${component.view({
+              ...behaviour,
+              ...props,
+              ...currentInstanceState
+            })}
           </div>
         `
       }

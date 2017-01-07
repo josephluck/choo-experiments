@@ -26,20 +26,18 @@ const Counters = (state, prev, send) => {
     <div>
       <h2>Counters</h2>
       ${counter('countme', {
-        initialState: {
-          count: 10
-        },
         props: {
-          name: 'Hello'
+          name: 'Counter one'
         }
       })}
       <br />
       ${counter('countmeaswell', {
         initialState: {
-          count: 10
+          count: 10,
+          title: 'Initial state defined title'
         },
         props: {
-          name: 'Hello'
+          name: 'Counter two'
         }
       })}
     </div>
