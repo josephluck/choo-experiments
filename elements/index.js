@@ -1,6 +1,7 @@
 const html = require('choo/html')
 
 const Button = require('./Button')
+const Counter = require('../components/Counter').component
 const Ripple = require('../components/Ripple').component
 const SnackBar = require('./SnackBar')
 const TextField = require('./TextField')
@@ -19,14 +20,45 @@ const Buttons = (state, prev, send) => {
   `
 }
 
+const Counters = (state, prev, send) => {
+  const counter = Counter(state, prev, send)
+  return html`
+    <div>
+      <h2>Counters</h2>
+      ${counter('countme', {
+        initialState: {
+          count: 10
+        },
+        props: {
+          name: 'Hello'
+        }
+      })}
+      <br />
+      ${counter('countmeaswell', {
+        initialState: {
+          count: 10
+        },
+        props: {
+          name: 'Hello'
+        }
+      })}
+    </div>
+  `
+}
+
 const Ripples = (state, prev, send) => {
   const ripple = Ripple(state, prev, send)
   return html`
     <div class="mb5">
       <h2>Ripple</h2>
-      ${ripple('abc', {
+      ${ripple('rip', {
         child: Button({
           label: 'Button with Ripple'
+        })
+      })}
+      ${ripple('rip2', {
+        child: Button({
+          label: 'Button with Ripple 2'
         })
       })}
     </div>
@@ -140,6 +172,7 @@ module.exports = () => (state, prev, send) => {
       <br />
 
       ${Buttons(state, prev, send)}
+      ${Counters(state, prev, send)}
       ${Ripples(state, prev, send)}
       ${SnackBars(state, prev, send)}
       ${TextFields(state, prev, send)}

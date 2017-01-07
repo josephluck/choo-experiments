@@ -68,12 +68,8 @@ const element = ({
   `
 }
 
-const emptyRippleState = () => {
-  return []
-}
-
-const component = (state, prev, send) => (id, props = {}, initialState = {}) => {
-  const ripples = state.ripple[id] ? state.ripple[id] : emptyRippleState()
+const component = (state, prev, send) => (id = 'ripple', props = {}, initialState = {}) => {
+  const ripples = state.ripple[id] ? state.ripple[id] : []
   const properties = Object.assign({}, props, {
     ripples,
     onload () {
@@ -98,30 +94,33 @@ const model = () => ({
   state: {},
   reducers: {
     init (state, { id, initialState }) {
-      const value = emptyRippleState()
-      return updateRippleWithId(id, value)
+      return updateRippleWithId(id, [])
     },
     clear (state, id) {
-      return updateRippleWithId(id, emptyRippleState())
+      return updateRippleWithId(id, [])
     },
-    show (state, { id, x, y, uuid }) {
-      const ripples = [ ...state[id], { x, y, uuid } ]
+    show (state, { id, x, y, uuid, showing }) {
+      const ripples = [ ...state[id], { x, y, uuid, showing } ]
       return updateRippleWithId(id, ripples)
     },
     hide (state, { id, uuid }) {
       const ripples = state[id].slice()
       const indexToRemove = ripples.findIndex(ripple => ripple.uuid === uuid)
-      ripples.splice(indexToRemove, 1)
+      ripples[indexToRemove].showing = false
       return updateRippleWithId(id, ripples)
+    },
+    removeAllIfFinished (state, id) {
+      return state[id].some(ripple => ripple.showing) ? state : updateRippleWithId(id, [])
     }
   },
   effects: {
     trigger (state, { id, position }, send, done) {
       const uuid = Math.random()
-      const payload = Object.assign({}, position, { uuid, id })
+      const payload = Object.assign({}, position, { uuid, id, showing: true })
       send('ripple:show', payload)
       window.setTimeout(() => {
         send('ripple:hide', { id, uuid })
+        send('ripple:removeAllIfFinished', id)
       }, 750)
     }
   }

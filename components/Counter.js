@@ -1,94 +1,51 @@
 const html = require('choo/html')
+const component = require('./chooComponent')
 
-const element = ({
-  count = 0,
-  thingVisible = false,
-  onload = () => {},
-  onunload = () => {},
-  onincr = () => {},
-  onmouseenter = () => { console.log('the mouse entered!') },
-  onmouseout = () => { console.log('the mouse left!') }
-}) => {
-  return html`
-  <div onunload=${onunload} onload=${onload}>
-    <button onclick=${onincr}>Increment</button>
-    <span onmouseenter=${onmouseenter} onmouseout=${onmouseout}>${count}</span>
+const counter = () => {
+  return {
+    model () {
+      return {
+        namespace: 'counter',
+        state: {},
+        reducers: {
+          increment (state, id) {
+            console.log('Should increment')
+            return {
+              instances: {
+                ...state.instances,
+                [id]: {
+                  count: state.instances[id].count + 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
 
-    ${thingVisible ? html`<span>This is toggled</span>` : ''}
-  </div>
-  `
-}
+    behaviour (send, id) {
+      return {
+        increment: () => {
+          send('counter:increment', id)
+        }
+      }
+    },
 
-const component = (state, prev, send) => (id, initialState = {}) => {
-  const currentCounter = state.counter[id] ? state.counter[id] : emptyCounter()
+    view ({
+      count = 0,
+      increment = () => {}
+    } = {}) {
+      return html`
+        <button onclick=${increment}>Increment ${count}</button>
+      `
+    },
 
-  return element({
-    count: currentCounter.value,
-    thingVisible: currentCounter.hovered,
-    onload () {
-      send('counter:init', { id, initialState })
-    },
-    onunload () {
-      send('counter:clear', id)
-    },
-    onincr () {
-      send('counter:increment', id)
-    },
-    onmouseenter () {
-      send('counter:setProp', {id, key: 'hovered', value: true})
-    },
-    onmouseout () {
-      send('counter:setProp', {id, key: 'hovered', value: false})
-    }
-  })
-}
-
-const emptyCounter = () => ({
-  value: 0,
-  hovered: false
-})
-
-const updateComponentWithId = (id, value) => {
-  return { [id]: value }
-}
-
-const model = () => ({
-  namespace: 'counter',
-  state: {
-    abc: {
-      value: 123
-    }
-  },
-  reducers: {
-    init (state, { id, initialState }) {
-      return updateComponentWithId(id, {
-        ...emptyCounter(),
-        ...initialState
-      })
-    },
-    set (state, { id, value }) {
-      return updateComponentWithId(id, {
-        ...state[id],
-        value
-      })
-    },
-    increment (state, id) {
-      const prev = state[id].value
-      return updateComponentWithId(id, {
-        ...state[id],
-        value: prev + 1
-      })
-    },
-    clear (state, id) {
-      return updateComponentWithId(id, emptyCounter())
-    },
-    setProp (state, { id, key, value }) {
-      return updateComponentWithId(id, {
-        ...state[id],
-        [key]: value
-      })
+    defaultState () {
+      return {
+        count: 0
+      }
     }
   }
-})
+}
 
-module.exports = { element, component, model }
+module.exports = component(counter)
