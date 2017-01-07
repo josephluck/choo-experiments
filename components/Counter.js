@@ -1,21 +1,19 @@
 const html = require('choo/html')
 const component = require('./chooComponent')
+const noop = () => {}
 
 const counter = () => {
   return {
-    model () {
-      return {
-        namespace: 'counter',
-        state: {},
-        reducers: {
-          increment (state, id) {
-            console.log('Should increment')
-            return {
-              instances: {
-                ...state.instances,
-                [id]: {
-                  count: state.instances[id].count + 1
-                }
+    model: {
+      namespace: 'counter',
+      reducers: {
+        increment (state, id) {
+          console.log('Should increment')
+          return {
+            instances: {
+              ...state.instances,
+              [id]: {
+                count: state.instances[id].count + 1
               }
             }
           }
@@ -23,9 +21,15 @@ const counter = () => {
       }
     },
 
+    defaultInstanceState () {
+      return {
+        count: 0
+      }
+    },
+
     behaviour (send, id) {
       return {
-        increment: () => {
+        increment () {
           send('counter:increment', id)
         }
       }
@@ -33,17 +37,11 @@ const counter = () => {
 
     view ({
       count = 0,
-      increment = () => {}
+      increment = noop
     } = {}) {
       return html`
         <button onclick=${increment}>Increment ${count}</button>
       `
-    },
-
-    defaultState () {
-      return {
-        count: 0
-      }
     }
   }
 }

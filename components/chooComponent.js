@@ -1,14 +1,13 @@
 const html = require('choo/html')
+const assert = require('assert')
 
 const removeInstanceWithId = (instances, id) => {
-  const combineObject = (curr, prev) => {
-    return {
-      ...instances[curr],
-      ...prev
-    }
-  }
+  const filteredInstances = Object.keys(instances)
+    .filter(key => key !== id)
+    .reduce((curr, prev) => Object.assign({}, instances[curr], prev), {})
+
   return {
-    instances: Object.keys(instances).filter(key => key !== id).reduce(combineObject, {})
+    instances: filteredInstances
   }
 }
 
@@ -49,30 +48,40 @@ const getDefaultReducers = () => {
 }
 
 module.exports = (definition) => {
+  assert.equal(typeof definition, 'function', 'Component must be a function')
   const component = definition()
-  const model = component.model()
-  const defaultReducers = getDefaultReducers(component.defaultState)
+  assert.equal(typeof component.view, 'function', 'Components view must be a function')
+  assert.equal(typeof component.model, 'object', 'Components model must be a object')
+  assert.equal(typeof component.behaviour, 'function', 'Components behaviour must be a function')
+  assert.equal(typeof component.model.namespace, 'string', 'Components model must have a namespace')
+  const defaultReducers = getDefaultReducers()
+  const state = {
+    ...component.model.state,
+    instances: {}
+  }
+  const reducers = {
+    ...component.model.reducers ? component.model.reducers : {},
+    ...defaultReducers
+  }
   return {
     model () {
       return {
-        namespace: model.namespace,
-        state: {
-          ...model.state,
-          instances: {}
-        },
-        reducers: {
-          ...model.reducers,
-          ...defaultReducers
-        }
+        namespace: component.model.namespace,
+        state: state,
+        reducers: reducers
       }
     },
     component (globalState, prev, send) {
-      return function (id, params) {
-        const currentInstanceState = globalState[model.namespace].instances[id] ? globalState[model.namespace].instances[id] : component.defaultState()
-        const defaultListeners = getDefaultListeners(model.namespace, send, id, params.initialState)
-        const behaviour = component.behaviour(send, id)
+      return function (instanceId, params) {
+        assert.equal(typeof instanceId, 'string', 'Component instance must have an instanceId')
+        const currentInstanceState = globalState[component.model.namespace].instances[instanceId]
+          ? globalState[component.model.namespace].instances[instanceId]
+          : component.defaultInstanceState
+            ? component.defaultInstanceState()
+            : {}
+        const defaultListeners = getDefaultListeners(component.model.namespace, send, instanceId, params.initialState)
+        const behaviour = component.behaviour(send, instanceId)
         const props = {
-          ...defaultListeners,
           ...currentInstanceState,
           ...params.props,
           ...behaviour
