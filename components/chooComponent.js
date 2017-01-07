@@ -37,13 +37,16 @@ module.exports = (component) => {
   assert.equal(typeof component.model, 'object', 'Components model must be an object')
   assert.equal(typeof component.behaviour, 'function', 'Components behaviour must be a function')
   assert.equal(typeof component.model.namespace, 'string', 'Components model must have a namespace')
+  assert.equal(typeof component.model.reducers, 'object', 'Components model have a reducers object')
+
   const defaultReducers = getDefaultReducers()
   const state = {
     ...component.model.state,
     instances: {}
   }
+  const componentReducers = component.model.reducers ? component.model.reducers : {}
   const reducers = {
-    ...component.model.reducers ? component.model.reducers : {},
+    ...componentReducers,
     ...defaultReducers
   }
   return {
@@ -62,13 +65,13 @@ module.exports = (component) => {
         const props = params ? params.props : {}
         const currentInstanceState = globalState[component.model.namespace].instances[instanceId]
           ? globalState[component.model.namespace].instances[instanceId]
-          : component.defaultState
-            ? component.defaultState
+          : component.model.state
+            ? component.model.state
             : {}
         const initialState = params && params.initialState
           ? params.initialState
-          : component.defaultState
-            ? component.defaultState
+          : component.model.state
+            ? component.model.state
             : {}
 
         return html`
