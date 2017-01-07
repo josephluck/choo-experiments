@@ -50,14 +50,18 @@ const Ripples = (state, prev, send) => {
     <div class="mb5">
       <h2>Ripple</h2>
       ${ripple('rip', {
-        child: Button({
-          label: 'Button with Ripple'
-        })
+        props: {
+          child: Button({
+            label: 'Button with Ripple'
+          })
+        }
       })}
       ${ripple('rip2', {
-        child: Button({
-          label: 'Button with Ripple 2'
-        })
+        props: {
+          child: Button({
+            label: 'Button with Ripple 2'
+          })
+        }
       })}
     </div>
   `

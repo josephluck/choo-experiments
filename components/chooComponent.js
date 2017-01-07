@@ -40,21 +40,21 @@ module.exports = (component) => {
   assert.equal(typeof component.model.reducers, 'object', 'Components model have a reducers object')
 
   const defaultReducers = getDefaultReducers()
-  const state = {
-    ...component.model.state,
-    instances: {}
-  }
   const componentReducers = component.model.reducers ? component.model.reducers : {}
   const reducers = {
     ...componentReducers,
     ...defaultReducers
   }
+  const effects = component.model.effects ? component.model.effects : {}
   return {
     model () {
       return {
         namespace: component.model.namespace,
-        state: state,
-        reducers: reducers
+        state: {
+          instances: {}
+        },
+        reducers: reducers,
+        effects: effects
       }
     },
     component (globalState, prev, send) {
