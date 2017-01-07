@@ -5,16 +5,15 @@ const noop = () => {}
 const counter = () => {
   return {
     // Global state behaviour for a component
+    // State is the default state for an instance of this component
+    //
     // possibly remove instances so it's easier to
     // consume / update state for these components?
-
-    // It looks like reducers are a little difficult to manage...
+    // or...
     // might wanna wrap the reducers in choo-component so that they
     // receive and return just their own instance state, that way
     // 'id' and 'instances' are not exposed here and the end user
     // does not need to be concerned about them
-
-    // State is the default state for an instance of this component
     model: {
       namespace: 'counter',
       state: {
@@ -50,6 +49,11 @@ const counter = () => {
     // Behaviour to link view methods to reducers
     // See above for comments on how to simplify reducers so that
     // they do not need to know about id and instances
+    //
+    // We could also skip this behaviour step entirely by assuming
+    // that the name of the function is the same as the name of
+    // the reducer since behaviour only links view methods to
+    // reducers
     behaviour (send, id) {
       return {
         increment () {
@@ -61,8 +65,11 @@ const counter = () => {
       }
     },
 
-    // Template / element - receives behaviour, props and state in it's first argument
-    // could possibly make these three separate arguments, i.e. state, methods, props?
+    // Template / element - receives methods, props and state
+    // in one object in its first argument
+    // methods correspond to component reducers
+    // props correspond to outside props
+    // state correspond to the current instance's internal state
     view ({
       name,
       count = 0,
