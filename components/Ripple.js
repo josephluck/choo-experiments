@@ -29,7 +29,6 @@ const prefix = css`
   }
 `
 
-// Unfortunately, effects still need to know about id :'(
 const ripple = () => {
   return {
     model: {
@@ -54,13 +53,13 @@ const ripple = () => {
         }
       },
       effects: {
-        rip (state, { id, position }, send, done) {
+        rip (state, { position }, send, done) {
           const uuid = Math.random()
-          const payload = Object.assign({}, position, { id, uuid, showing: true })
+          const payload = Object.assign({}, position, { uuid, showing: true })
           send('ripple:add', payload)
           window.setTimeout(() => {
-            send('ripple:hide', { id, uuid })
-            send('ripple:remove', { id })
+            send('ripple:hide', { uuid })
+            send('ripple:remove')
           }, 750)
         }
       }

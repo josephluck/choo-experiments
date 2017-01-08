@@ -29,7 +29,9 @@ const defaultReducers = () => {
 // Wrap reducers so that functions in the component
 // receive instance state rather than global state
 // note that for this to work, reducers need to be
-// send object payloads
+// send object payloads. Reducers then only need
+// to return an updated instance state and do not
+// need to worry about other instances
 const decorateReducers = (reducers) => {
   return Object.keys(reducers).reduce((curr, key) => {
     const enhancedPayload = (state, payload) => {
@@ -46,6 +48,33 @@ const decorateReducers = (reducers) => {
     return {
       ...curr,
       [key]: enhancedPayload
+    }
+  }, {})
+}
+
+// Wrap effects so that they do not need to know
+// about instances or ids. We create a new send
+// function that adds the id to the payload so
+// that the above reducers know what to do.
+// Note for this to work, the effect payload
+// needs to be an object, and all reducer payloads
+// need to be objects
+const decorateEffects = (effects, instanceId) => {
+  return Object.keys(effects).reduce((curr, key) => {
+    return {
+      ...curr,
+      [key]: (state, payload, send, done) => {
+        const newSend = (name, reducerPayload) => {
+          if (reducerPayload) {
+            assert.equal(typeof reducerPayload, 'object', 'Reducer payload must be an object')
+          }
+          send(name, {
+            ...reducerPayload,
+            id: payload.id
+          })
+        }
+        effects[key](state, payload, newSend, done)
+      }
     }
   }, {})
 }
@@ -77,7 +106,7 @@ module.exports = (component) => {
     ...decorateReducers(component.model.reducers ? component.model.reducers : {}),
     ...defaultReducers()
   }
-  const effects = component.model.effects ? component.model.effects : {}
+  const effects = decorateEffects(component.model.effects ? component.model.effects : {})
 
   return {
     model () {
