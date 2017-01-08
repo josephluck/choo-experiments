@@ -29,15 +29,7 @@ const prefix = css`
   }
 `
 
-const updateInstance = (instances, id, value) => {
-  const state = {
-    instances: Object.assign({}, instances, {
-      [id]: value
-    })
-  }
-  return state
-}
-
+// Unfortunately, effects still need to know about id :'(
 const ripple = () => {
   return {
     model: {
@@ -46,43 +38,30 @@ const ripple = () => {
         ripples: []
       },
       reducers: {
-        add (state, { id, x, y, uuid, showing }) {
-          const ripples = [ ...state.instances[id].ripples, { x, y, uuid, showing } ]
-          return updateInstance(state.instances, id, {
-            ripples: ripples
-          })
+        add (state, { x, y, uuid, showing }) {
+          return {
+            ripples: [ ...state.ripples, { x, y, uuid, showing } ]
+          }
         },
-        hide (state, { id, uuid }) {
-          const ripples = state.instances[id].ripples.slice()
+        hide (state, { uuid }) {
+          const ripples = state.ripples.slice()
           const indexToRemove = ripples.findIndex(ripple => ripple.uuid === uuid)
           ripples[indexToRemove].showing = false
-          return updateInstance(state.instances, id, {
-            ripples: ripples
-          })
+          return { ripples }
         },
-        remove (state, id) {
-          state.instances[id].ripples.some(ripple => ripple.showing) ? state : updateInstance(state.instances, id, {
-            ripples: []
-          })
+        remove (state) {
+          return state.ripples.some(ripple => ripple.showing) ? state : { ripples: [] }
         }
       },
       effects: {
         rip (state, { id, position }, send, done) {
           const uuid = Math.random()
-          const payload = Object.assign({}, position, { uuid, id, showing: true })
+          const payload = Object.assign({}, position, { id, uuid, showing: true })
           send('ripple:add', payload)
           window.setTimeout(() => {
             send('ripple:hide', { id, uuid })
-            send('ripple:remove', id)
+            send('ripple:remove', { id })
           }, 750)
-        }
-      }
-    },
-
-    behaviour (send, id) {
-      return {
-        rip (position) {
-          send('ripple:rip', { id, position })
         }
       }
     },
@@ -94,8 +73,10 @@ const ripple = () => {
     }) {
       const onmousedown = (e) => {
         rip({
-          y: e.pageY - e.target.parentNode.offsetTop,
-          x: e.pageX - e.target.parentNode.offsetLeft
+          position: {
+            y: e.pageY - e.target.parentNode.offsetTop,
+            x: e.pageX - e.target.parentNode.offsetLeft
+          }
         })
       }
       return html`

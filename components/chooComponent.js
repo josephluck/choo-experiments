@@ -6,7 +6,7 @@ const assert = require('assert')
 // onload and onunload lifecycle methods are called
 // setup sets the default state in the component
 // and teardown removes an instance from the state
-const getDefaultReducers = () => {
+const defaultReducers = () => {
   return {
     setup (state, payload) {
       return {
@@ -30,7 +30,7 @@ const getDefaultReducers = () => {
 // receive instance state rather than global state
 // note that for this to work, reducers need to be
 // send object payloads
-const generateReducers = (reducers) => {
+const decorateReducers = (reducers) => {
   return Object.keys(reducers).reduce((curr, key) => {
     const enhancedPayload = (state, payload) => {
       return {
@@ -52,15 +52,15 @@ const generateReducers = (reducers) => {
 
 // Create glue between the components methods and
 // the components reducers.
-// note that for this to work, reducers need to be
-// send object payloads
-const generateBehaviour = (reducers, send, instanceId, namespace, state) => {
-  return Object.keys(reducers).reduce((curr, key) => {
+// note that for this to work, reducers & effects
+// need to be send object payloads
+const generateBehaviour = (reducers, effects, send, instanceId, namespace, state) => {
+  return Object.keys(reducers).concat(Object.keys(effects)).reduce((curr, key) => {
     return {
       ...curr,
       [key]: (payload) => {
         assert.equal(typeof payload, 'object', `reducer ${key}: payload must be an object`)
-        send(`${namespace}:${key}`, {id: instanceId, ...payload})
+        send(`${namespace}:${key}`, { id: instanceId, ...payload })
       }
     }
   }, {})
@@ -74,9 +74,10 @@ module.exports = (component) => {
   assert.equal(typeof component.model.reducers, 'object', 'Components model have a reducers object')
 
   const reducers = {
-    ...generateReducers(component.model.reducers ? component.model.reducers : {}),
-    ...getDefaultReducers()
+    ...decorateReducers(component.model.reducers ? component.model.reducers : {}),
+    ...defaultReducers()
   }
+  const effects = component.model.effects ? component.model.effects : {}
 
   return {
     model () {
@@ -86,14 +87,13 @@ module.exports = (component) => {
           instances: {}
         },
         reducers: reducers,
-        effects: component.model.effects ? component.model.effects : {}
+        effects: effects
       }
     },
     component (globalState, prev, send) {
       return function (instanceId, params) {
         assert.equal(typeof instanceId, 'string', 'Component instance must have an instanceId')
-        const behaviour = generateBehaviour(reducers, send, instanceId, component.model.namespace, globalState)
-
+        const behaviour = generateBehaviour(reducers, effects, send, instanceId, component.model.namespace, globalState)
         const props = params ? params.props : {}
         const currentInstanceState = globalState[component.model.namespace].instances[instanceId]
           ? globalState[component.model.namespace].instances[instanceId]
@@ -106,8 +106,11 @@ module.exports = (component) => {
             ? component.model.state
             : {}
 
+        // May need a class here since wrapping a
+        // component in a div might not be ideal
         return html`
           <div
+            class=${component.className || ''}
             onload=${function () {
               send(`${component.model.namespace}:setup`, {
                 id: instanceId,

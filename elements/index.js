@@ -25,13 +25,12 @@ const Counters = (state, prev, send) => {
   return html`
     <div>
       <h2>Counters</h2>
-      ${counter('countme', {
+      ${counter('first', {
         props: {
           name: 'Counter one'
         }
       })}
-      <br />
-      ${counter('countmeaswell', {
+      ${counter('second', {
         initialState: {
           count: 10,
           title: 'Initial state defined title'
