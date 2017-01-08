@@ -46,7 +46,7 @@ const ripple = () => {
         ripples: []
       },
       reducers: {
-        show (state, { id, x, y, uuid, showing }) {
+        add (state, { id, x, y, uuid, showing }) {
           const ripples = [ ...state.instances[id].ripples, { x, y, uuid, showing } ]
           return updateInstance(state.instances, id, {
             ripples: ripples
@@ -60,20 +60,20 @@ const ripple = () => {
             ripples: ripples
           })
         },
-        removeAllIfFinished (state, id) {
+        remove (state, id) {
           state.instances[id].ripples.some(ripple => ripple.showing) ? state : updateInstance(state.instances, id, {
             ripples: []
           })
         }
       },
       effects: {
-        trigger (state, { id, position }, send, done) {
+        rip (state, { id, position }, send, done) {
           const uuid = Math.random()
           const payload = Object.assign({}, position, { uuid, id, showing: true })
-          send('ripple:show', payload)
+          send('ripple:add', payload)
           window.setTimeout(() => {
             send('ripple:hide', { id, uuid })
-            send('ripple:removeAllIfFinished', id)
+            send('ripple:remove', id)
           }, 750)
         }
       }
@@ -81,12 +81,8 @@ const ripple = () => {
 
     behaviour (send, id) {
       return {
-        onmousedown (e) {
-          const position = {
-            y: e.pageY - e.target.parentNode.offsetTop,
-            x: e.pageX - e.target.parentNode.offsetLeft
-          }
-          send('ripple:trigger', { id, position })
+        rip (position) {
+          send('ripple:rip', { id, position })
         }
       }
     },
@@ -94,8 +90,14 @@ const ripple = () => {
     view ({
       ripples = [],
       child = '',
-      onmousedown = () => {}
+      rip = () => {}
     }) {
+      const onmousedown = (e) => {
+        rip({
+          y: e.pageY - e.target.parentNode.offsetTop,
+          x: e.pageX - e.target.parentNode.offsetLeft
+        })
+      }
       return html`
         <div
           class=${prefix}
@@ -107,7 +109,7 @@ const ripple = () => {
                 height="20"
                 width="20"
                 class="ripple"
-                style="top: ${ripple.y}px; left: ${ripple.x}px"
+                style="top: ${ripple.y || 0}px; left: ${ripple.x || 0}px"
               >
                 <circle
                   class="ripple-inner"
