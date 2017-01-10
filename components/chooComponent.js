@@ -12,14 +12,14 @@ const defaultReducers = () => {
       return {
         instances: {
           ...state.instances,
-          [payload.id]: payload.initialState
+          [payload.instanceId]: payload.initialState
         }
       }
     },
     teardown (state, payload) {
       return {
         instances: Object.keys(state.instances)
-          .filter(key => key !== payload.id)
+          .filter((key) => key !== payload.instanceId)
           .reduce((curr, prev) => Object.assign({}, state.instances[curr], prev), {})
       }
     }
@@ -38,9 +38,9 @@ const decorateReducers = (reducers) => {
       return {
         instances: {
           ...state.instances,
-          [payload.id]: {
-            ...state.instances[payload.id],
-            ...reducers[key](state.instances[payload.id], payload)
+          [payload.instanceId]: {
+            ...state.instances[payload.instanceId],
+            ...reducers[key](state.instances[payload.instanceId], payload)
           }
         }
       }
@@ -53,8 +53,8 @@ const decorateReducers = (reducers) => {
 }
 
 // Wrap effects so that they do not need to know
-// about instances or ids. We create a new send
-// function that adds the id to the payload so
+// about instances or instanceIds. We create a new send
+// function that adds the instanceId to the payload so
 // that the above reducers know what to do.
 // Note for this to work, the effect payload
 // needs to be an object, and all reducer payloads
@@ -70,7 +70,7 @@ const decorateEffects = (effects, instanceId) => {
           }
           send(name, {
             ...reducerPayload,
-            id: payload.id
+            instanceId: payload.instanceId
           })
         }
         effects[key](state, payload, newSend, done)
@@ -89,7 +89,7 @@ const generateBehaviour = (reducers, effects, send, instanceId, namespace, state
       ...curr,
       [key]: (payload) => {
         assert.equal(typeof payload, 'object', `reducer ${key}: payload must be an object`)
-        send(`${namespace}:${key}`, { id: instanceId, ...payload })
+        send(`${namespace}:${key}`, { instanceId: instanceId, ...payload })
       }
     }
   }, {})
@@ -109,15 +109,13 @@ module.exports = (component) => {
   const effects = decorateEffects(component.model.effects ? component.model.effects : {})
 
   return {
-    model () {
-      return {
-        namespace: component.model.namespace,
-        state: {
-          instances: {}
-        },
-        reducers: reducers,
-        effects: effects
-      }
+    model: {
+      namespace: component.model.namespace,
+      state: {
+        instances: {}
+      },
+      reducers: reducers,
+      effects: effects
     },
     component (globalState, prev, send) {
       return function (instanceId, params) {
@@ -135,20 +133,23 @@ module.exports = (component) => {
             ? component.model.state
             : {}
 
-        // May need a class here since wrapping a
-        // component in a div might not be ideal
+        // Although we have class here so it gives the
+        // end user an opportunity to style the wrapping
+        // elm, it's not the instanceIdeal situation. It would
+        // be better if the end user could specify the
+        // tag.
         return html`
           <div
             class=${component.className || ''}
-            onload=${function () {
+            onload=${() => {
               send(`${component.model.namespace}:setup`, {
-                id: instanceId,
+                instanceId: instanceId,
                 initialState: initialState
               })
             }}
-            onunload=${function () {
+            onunload=${() => {
               send(`${component.model.namespace}:clear`, {
-                id: instanceId
+                instanceId: instanceId
               })
             }}
           >

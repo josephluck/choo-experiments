@@ -5,7 +5,10 @@ const noop = () => {}
 const counter = () => {
   const defaultState = {
     count: 5,
-    title: 'Default title'
+    title: 'Default title',
+    foo: {
+      bar: 'hello'
+    }
   }
   return {
     className: 'dib ba pa3 mb3',

@@ -1,6 +1,7 @@
 const html = require('choo/html')
 const css = require('sheetify')
 const component = require('./chooComponent')
+const noop = () => {}
 
 const prefix = css`
   @keyframes ripple-animation {
@@ -31,6 +32,7 @@ const prefix = css`
 
 const ripple = () => {
   return {
+    className: 'dib',
     model: {
       namespace: 'ripple',
       state: {
@@ -43,13 +45,17 @@ const ripple = () => {
           }
         },
         hide (state, { uuid }) {
-          const ripples = state.ripples.slice()
-          const indexToRemove = ripples.findIndex(ripple => ripple.uuid === uuid)
-          ripples[indexToRemove].showing = false
-          return { ripples }
+          return {
+            ripples: state.ripples.map((ripple) => {
+              if (ripple.uuid === uuid) {
+                ripple.showing = false
+              }
+              return ripple
+            })
+          }
         },
         remove (state) {
-          return state.ripples.some(ripple => ripple.showing) ? state : { ripples: [] }
+          return state.ripples.some((ripple) => ripple.showing) ? state : { ripples: [] }
         }
       },
       effects: {
@@ -68,7 +74,7 @@ const ripple = () => {
     view ({
       ripples = [],
       child = '',
-      rip = () => {}
+      rip = noop
     }) {
       const onmousedown = (e) => {
         rip({
