@@ -1,15 +1,6 @@
 const html = require('choo/html')
-const component = require('./chooComponent')
-const noop = () => {}
-
+const component = require('choo-component')
 const counter = () => {
-  const defaultState = {
-    count: 5,
-    title: 'Default title',
-    foo: {
-      bar: 'hello'
-    }
-  }
   return {
     className: 'dib ba pa3 mb3',
 
@@ -18,7 +9,13 @@ const counter = () => {
     // this default state, if no initialState is passed
     model: {
       namespace: 'counter',
-      state: defaultState,
+      state: {
+        count: 5,
+        title: 'Default title',
+        foo: {
+          bar: 'hello'
+        }
+      },
       reducers: {
         increment (state) {
           return {
@@ -39,11 +36,11 @@ const counter = () => {
     // props corresponds to outside props passed from parent page / component
     // state corresponds to the current instance's internal state
     view ({
-      name, // prop
-      count = defaultState.count, // state
-      title = defaultState.title, // state
-      updateTitle = noop, // method
-      increment = noop // method
+      name,
+      count,
+      title,
+      updateTitle,
+      increment
     } = {}) {
       return html`
         <div>
@@ -64,6 +61,4 @@ const counter = () => {
   }
 }
 
-// This will export a component (for use in choo views) and a model which needs
-// to be registered in the choo app on boot
 module.exports = component(counter())

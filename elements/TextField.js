@@ -91,7 +91,7 @@ module.exports = ({
           disabled=${disabled}
           class=${`
             ${value.length ? '--has-value' : ''}
-            ${validation.length ? '--is-invalid' : ''}
+            ${validation && validation.length ? '--is-invalid' : ''}
           `}
         />
         <label>

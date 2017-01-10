@@ -30,7 +30,6 @@ module.exports = ({
 
         <a
           onclick=${onLogoutClick}
-          class="white"
         >
           Logout
         </a>
@@ -42,6 +41,10 @@ module.exports = ({
           {
             label: 'Dashboard',
             href: '/dashboard'
+          },
+          {
+            label: 'Map',
+            href: '/map'
           }
         ]
       })}
