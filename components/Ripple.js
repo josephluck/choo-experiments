@@ -1,8 +1,8 @@
 const html = require('choo/html')
-const css = require('sheetify')
-const component = require('./chooComponent')
+const component = require('choo-component')
 const noop = () => {}
 
+const css = require('sheetify')
 const prefix = css`
   @keyframes ripple-animation {
     to {
@@ -86,7 +86,9 @@ const ripple = () => {
       }
       return html`
         <div
-          class=${prefix}
+          class=${`
+            ${prefix}
+          `}
           onmousedown=${onmousedown}
         >
           ${ripples.map((ripple) => {

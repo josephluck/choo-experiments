@@ -1,6 +1,6 @@
 const html = require('choo/html')
-const css = require('sheetify')
 
+const css = require('sheetify')
 const prefix = css`
   :host {
     color: #f34336;
@@ -17,7 +17,9 @@ module.exports = ({
     return messages.map((message) => {
       return html`
         <div
-          class=${prefix}
+          class=${`
+            ${prefix}
+          `}
         >
           ${message}
         </div>

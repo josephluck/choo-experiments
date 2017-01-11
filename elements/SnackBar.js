@@ -1,6 +1,6 @@
 const html = require('choo/html')
-const css = require('sheetify')
 
+const css = require('sheetify')
 const prefix = css`
   :host .snack {
     position: fixed;
@@ -33,13 +33,13 @@ module.exports = ({
   return html`
     <div
       class=${`
-        ${prefix}
+        gmd-snack
         ${className}
       `}
     >
       <div
         class=${`
-          snack
+          ${prefix}
           ${showing ? '--is-showing' : ''}
         `}
       >

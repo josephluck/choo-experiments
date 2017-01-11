@@ -1,8 +1,7 @@
 const html = require('choo/html')
-const css = require('sheetify')
-const noop = () => {}
+const cx = require('sheetify')
 
-const prefix = css`
+const prefix = cx`
   :host {
     background: #3096f3;
     color: white;
@@ -26,10 +25,10 @@ const prefix = css`
 `
 
 const Button = ({
-  className = '',
-  label = '',
-  type = 'button',
-  onClick = noop
+  type,
+  onClick,
+  label,
+  className
 }) => {
   return html`
     <button

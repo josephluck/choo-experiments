@@ -1,8 +1,8 @@
 const html = require('choo/html')
-const css = require('sheetify')
 const noop = () => {}
 const Validation = require('./Validation')
 
+const css = require('sheetify')
 const prefix = css`
   :host {
     position: relative;

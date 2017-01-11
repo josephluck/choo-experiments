@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production npm run build && npm run minify && node server.js",
     "dev": "cross-env NODE_ENV=development budo app.js --live --pushstate --host=localhost --port=8888 --serve bundle.js --base=/ --onupdate \"standard | notify-error\" -- -t sheetify/transform -t babelify",
     "build": "npm run bundle && npm run minify",
-    "bundle": "cross-env NODE_ENV=production browserify app.js -t [ sheetify/transform ] -p [ css-extract -o ./build/assets/bundle.css ] -t [ babelify ] -t [ envify ] -t [ yo-yoify ] -t [ unassertify ] --full-paths -o ./build/assets/bundle.js",
+    "bundle": "cross-env NODE_ENV=production browserify app.js -t [ sheetify/transform ] -p [ css-extract -o ./build/assets/bundle.css ] -t babelify -t unassertify -t envify -t yo-yoify --debug --verbose -o ./build/assets/bundle.js",
     "minify": "cross-env NODE_ENV=production uglifyjs --compress --mangle --output=./build/assets/bundle.min.js -- ./build/assets/bundle.js",
     "lint": "standard",
     "unit": "cross-env NODE_ENV=test tape -r babel-register -r babel-polyfill **/*.unit.js | tap-spec",
@@ -33,9 +33,10 @@
     "validate.js": "^0.11.1"
   },
   "devDependencies": {
+    "@types/node": "^7.0.0",
     "assert": "^1.4.1",
     "babel-core": "^6.21.0",
-    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2015-nostrict": "^6.6.2",
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.18.0",
     "babelify": "^7.3.0",
@@ -56,6 +57,7 @@
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3",
     "tape-watch": "^2.2.4",
+    "typescript": "^2.1.4",
     "uglify-js": "^2.7.5",
     "uglifyify": "^3.0.4",
     "unassertify": "^2.0.4",

@@ -81,10 +81,8 @@ const map = () => {
         setLeafletInstanceCoords (state, { instanceId }, send, done) {
           state.instances[instanceId].leafletInstance.setView(state.instances[instanceId].coords)
         },
-        createMapInstanceIfRequired (state, { instanceId, ...payload }, send, done) {
-          if (!state.instances[instanceId].mapWidgetInstance) {
-            send('map:setMapWidgetInstance', { mapWidgetInstance: mapWidgetInstance(payload) })
-          }
+        createMapInstance (state, { instanceId, ...payload }, send, done) {
+          send('map:setMapWidgetInstance', { mapWidgetInstance: mapWidgetInstance(payload) })
         }
       }
     },
@@ -97,13 +95,15 @@ const map = () => {
       setupLeafletInstance,
       teardownMap,
       mapWidgetInstance,
-      createMapInstanceIfRequired
+      createMapInstance
     } = {}) {
-      createMapInstanceIfRequired({
-        setupLeafletInstance,
-        teardownMap,
-        setLeafletInstanceCoords
-      })
+      if (!mapWidgetInstance) {
+        createMapInstance({
+          setupLeafletInstance,
+          teardownMap,
+          setLeafletInstanceCoords
+        })
+      }
       return html`
         <div>
           <button onclick=${() => {
