@@ -5,5 +5,5 @@ module.exports = [
   require('./material')({}),
   require('../components/Counter').model,
   require('../components/Ripple').model,
-  require('./map')({})
+  require('../components/Map').model
 ]

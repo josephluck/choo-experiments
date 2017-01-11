@@ -29,6 +29,7 @@ document.body.appendChild(app.start())
 // Css
 css('tachyons/css/tachyons.css')
 css('tachyons-flexbox/css/tachyons-flexbox.css')
+css('leaflet/dist/leaflet.css')
 css('./styles/core.css')
 
 module.exports = app

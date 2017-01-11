@@ -2,6 +2,7 @@ const html = require('choo/html')
 
 const Button = require('./Button')
 const Counter = require('../components/Counter').component
+const Leaflet = require('../components/Map').component
 const Ripple = require('../components/Ripple').component
 const SnackBar = require('./SnackBar')
 const TextField = require('./TextField')
@@ -39,6 +40,24 @@ const Counters = (state, prev, send) => {
           name: 'Counter two'
         }
       })}
+    </div>
+  `
+}
+
+const Leaflets = (state, prev, send) => {
+  const leaflet = Leaflet(state, prev, send)
+  return html`
+    <div>
+      <h2>Maps</h2>
+      <div style="width: 500px">
+        ${leaflet('first', {
+          initialState: {
+            coords: [39.9526, -75.1652]
+          }
+        })}
+        <br />
+        ${leaflet('second')}
+      </div>
     </div>
   `
 }
@@ -174,6 +193,7 @@ module.exports = () => (state, prev, send) => {
 
       ${Buttons(state, prev, send)}
       ${Counters(state, prev, send)}
+      ${Leaflets(state, prev, send)}
       ${Ripples(state, prev, send)}
       ${SnackBars(state, prev, send)}
       ${TextFields(state, prev, send)}
